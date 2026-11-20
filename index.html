@@ -1829,8 +1829,6 @@ html.night .sc-dot{box-shadow:0 6px 20px rgba(0,0,0,.35),inset 0 0 0 1px rgba(25
 .sc-dot b{font:800 1.05rem/1 Nunito,Manrope,system-ui,sans-serif;color:var(--navy);font-variant-numeric:tabular-nums}
 @keyframes scPop{from{opacity:0;transform:scale(.5)}}
 /* Details wachsen als Kreis aus dem Punkt */
-.sheet.ss-morph[open]{animation:ssMorph .6s cubic-bezier(.2,.85,.25,1) backwards}
-@keyframes ssMorph{from{clip-path:circle(24px at var(--ox) var(--oy));opacity:.6}35%{opacity:1}to{clip-path:circle(150vmax at var(--ox) var(--oy))}}
 @media (prefers-reduced-motion:reduce){.sc-dot .fg{animation:none;stroke-dashoffset:var(--o)}.sc-dot{animation:none}}
 .sheet.ss-done[open]:not(.closing){animation:none}
 
@@ -5382,8 +5380,13 @@ render(); setInterval(() => { if (!holding && !$('#sheet').open) render(true); }
     const b = e.target.closest('[data-sc-open]'); if (!b) return;
     const r = b.getBoundingClientRect(); b.classList.add('tap'); setTimeout(() => b.classList.remove('tap'), 400);
     open(); const d = document.getElementById('sheet'); if (RM() || !d.open) return;
-    const sr = d.getBoundingClientRect(); d.style.setProperty('--ox', (r.left + r.width / 2 - sr.left) + 'px'); d.style.setProperty('--oy', (r.top + r.height / 2 - sr.top) + 'px');
-    d.classList.remove('ss-morph', 'ss-done'); void d.offsetWidth; d.classList.add('ss-morph'); d.addEventListener('animationend', function f(ev) { if (ev.target === d && ev.animationName === 'ssMorph') { d.classList.replace('ss-morph', 'ss-done'); d.removeEventListener('animationend', f); } });
+    if (!d.animate) return;
+    d.getAnimations && d.getAnimations().forEach(an => an.cancel()); d.classList.add('ss-done');
+    const sr = d.getBoundingClientRect(), ox = r.left + r.width / 2 - sr.left, oy = r.top + r.height / 2 - sr.top;
+    const R = Math.max(...[[0, 0], [sr.width, 0], [0, sr.height], [sr.width, sr.height]].map(([x, y]) => Math.hypot(x - ox, y - oy))) + 4;
+    const an = d.animate([{ clipPath: `circle(${r.width / 2}px at ${ox}px ${oy}px)`, opacity: .7 }, { clipPath: `circle(${R * .55}px at ${ox}px ${oy}px)`, opacity: 1, offset: .45 }, { clipPath: `circle(${R}px at ${ox}px ${oy}px)`, opacity: 1 }],
+      { duration: 620, easing: 'cubic-bezier(.45,.05,.25,1)' });
+    an.onfinish = an.oncancel = () => { d.style.clipPath = ''; };
   });
   const _cs = window.closeSheet; window.closeSheet = function () { document.getElementById('sheet').classList.remove('ss-morph', 'ss-done'); return _cs.apply(this, arguments); };
   addEventListener('sa-score', open);
