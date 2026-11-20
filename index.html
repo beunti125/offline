@@ -1815,6 +1815,26 @@ a.btn.iw-go,.iw a.btn{text-decoration:none}
 @keyframes ssIn{from{opacity:0;transform:translateY(8px)}}
 @media (prefers-reduced-motion:reduce){.ss-ring .fg{animation:none;stroke-dashoffset:var(--o)}.ss-row u{animation:none;width:var(--w)}.ss-row,.ss-zone,.ss-last,.ss-need,.ss-tip{animation:none}}
 
+/* Score-Chip auf der Startseite */
+.sc-chip{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:11px;margin:12px 0 0;padding:7px 12px 7px 7px;border-radius:999px;max-width:100%;
+  background:color-mix(in srgb,var(--card) 62%,transparent);-webkit-backdrop-filter:blur(16px) saturate(1.3);backdrop-filter:blur(16px) saturate(1.3);
+  border:1px solid color-mix(in srgb,#fff 45%,transparent);box-shadow:0 6px 22px rgba(20,30,70,.12);transition:transform .15s;animation:ssIn .5s .1s both}
+html.night .sc-chip{border-color:rgba(255,255,255,.12);box-shadow:0 6px 22px rgba(0,0,0,.3)}
+.sc-chip:active{transform:scale(.97)}
+.sc-ring{position:relative;width:42px;height:42px;flex:none;display:grid;place-items:center}
+.sc-ring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.sc-ring circle{fill:none;stroke-width:4;stroke-linecap:round}
+.sc-ring .bg{stroke:color-mix(in srgb,var(--z,#AEB8D6) 22%,transparent)}
+.sc-ring .fg{stroke:var(--z);stroke-dasharray:var(--c);stroke-dashoffset:var(--c);animation:ssRing 1s cubic-bezier(.2,.9,.3,1) .25s forwards}
+.sc-ring b{font:800 1rem/1 Nunito,Manrope,system-ui,sans-serif;color:var(--navy);font-variant-numeric:tabular-nums}
+.sc-t{display:flex;flex-direction:column;gap:2px;min-width:0}
+.sc-t small{font-size:.66rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.sc-t small i{font-style:normal;color:var(--z)}
+.sc-t small em{font-style:normal;letter-spacing:0}.sc-t small em.up{color:var(--ok)}.sc-t small em.down{color:var(--bad)}
+.sc-t b{font-size:.9rem;font-weight:700;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc-chev{width:16px;height:16px;flex:none;color:var(--muted);margin-left:2px}
+@media (prefers-reduced-motion:reduce){.sc-ring .fg{animation:none;stroke-dashoffset:var(--o)}.sc-chip{animation:none}}
+
 </style>
 </head>
 <body>
@@ -5292,6 +5312,21 @@ render(); setInterval(() => { if (!holding && !$('#sheet').open) render(true); }
     (function step(tt) { const k = Math.min(1, (tt - t0) / d0), e = 1 - Math.pow(1 - k, 3); els.forEach(el => el.textContent = Math.round(Number(el.dataset.ss) * e)); if (k < 1) requestAnimationFrame(step); })(t0);
     try { buzz([8, 30, 8]); } catch (e) { }
   }
+
+  /* Startseite: Score als kompakter Glas-Chip unter der Begrüßung (keine Kugel mehr, die Sonne bleibt) */
+  if (window.Orb) { const _m = Orb.mount, _u = Orb.update; Orb.mount = (el, d) => _m(el, Object.assign({}, d, { scoreY: 0 })); Orb.update = d => _u(d && 'scoreY' in d ? Object.assign({}, d, { scoreY: 0 }) : d); }
+  function chip() {
+    const all = sorted(), m = metrics(all.slice(-7)), prev = metrics(all.slice(-14, -7)), C = 2 * Math.PI * 16;
+    if (!m) return `<button class="sc-chip none" data-sc-open><span class="sc-ring"><b>–</b></span><span class="sc-t"><small>Schlaf-Score</small><b>Nach der ersten Nacht</b></span></button>`;
+    const z = scoreZone(m.score), d = prev ? m.score - prev.score : null, t = tonight(m);
+    return `<button class="sc-chip" data-sc-open style="--z:${z.c}" aria-label="Schlaf-Score ${m.score} Prozent, ${z.l}. Details öffnen">
+      <span class="sc-ring"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="16" class="bg"/><circle cx="20" cy="20" r="16" class="fg" style="--c:${C.toFixed(1)};--o:${(C * (1 - m.score / 100)).toFixed(1)}"/></svg><b>${m.score}</b></span>
+      <span class="sc-t"><small>Schlaf-Score · <i>${z.l}</i>${d != null && d ? ` <em class="${d > 0 ? 'up' : 'down'}">${d > 0 ? '▲' : '▼'}${Math.abs(d)}</em>` : ''}</small><b>Heute Nacht brauchst du ${dur(t.total)}</b></span>
+      <svg class="sc-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>`;
+  }
+  const _vh = window.vHeute;
+  window.vHeute = function () { const h = _vh.apply(this, arguments), i = h.indexOf('</div>'); return i < 0 ? h : h.slice(0, i + 6) + chip() + h.slice(i + 6); };
+  document.addEventListener('click', e => { if (e.target.closest('[data-sc-open]')) open(); });
   addEventListener('sa-score', open);
   window.openScoreStats = open;
 })();
