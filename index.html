@@ -1918,6 +1918,15 @@ html.night .sc-dot{box-shadow:0 6px 20px rgba(0,0,0,.35),inset 0 0 0 1px rgba(25
 </div>
 <script>
 'use strict';
+/* Offline – Ersatz für Funktionen, die ältere iOS-Versionen (vor 15.4) nicht kennen */
+if (typeof window.structuredClone !== 'function') window.structuredClone = v => v === undefined ? v : JSON.parse(JSON.stringify(v));
+if (!Array.prototype.findLastIndex) Object.defineProperty(Array.prototype, 'findLastIndex', { configurable: true, writable: true, value: function (f, t) { for (let i = this.length - 1; i >= 0; i--) if (f.call(t, this[i], i, this)) return i; return -1; } });
+if (!Array.prototype.findLast) Object.defineProperty(Array.prototype, 'findLast', { configurable: true, writable: true, value: function (f, t) { const i = this.findLastIndex(f, t); return i < 0 ? undefined : this[i]; } });
+if (!Array.prototype.at) Object.defineProperty(Array.prototype, 'at', { configurable: true, writable: true, value: function (n) { n = Math.trunc(n) || 0; if (n < 0) n += this.length; return this[n]; } });
+
+</script>
+<script>
+'use strict';
 /* Schlafanker – Personalisierung: Einrichtung beim ersten Start, persönliche Tipps, Erkenntnisse aus deinen Daten.
    Wird vor app.js geladen; nutzt S, save, render usw. erst zur Laufzeit. */
 
