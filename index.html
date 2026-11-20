@@ -1835,6 +1835,60 @@ html.night .sc-dot{box-shadow:0 6px 20px rgba(0,0,0,.35),inset 0 0 0 1px rgba(25
 .sheet.ss-done[open]:not(.closing){animation:none}
 
 </style>
+<style>
+/* Dein Muster – persönliche Analyse im Verlauf */
+.mu{all:unset;box-sizing:border-box;display:block;width:100%;cursor:pointer;padding:14px 16px;transition:transform .15s}
+.card.mu{background:var(--card)}
+.mu:active{transform:scale(.985)}
+.mu-top{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center}
+.mu-wait .mu-top{grid-template-columns:40px 1fr}
+.mu-top>i{display:grid;place-items:center;width:40px;height:40px;border-radius:13px;font-style:normal;font-size:1.3rem;background:color-mix(in srgb,var(--accent) 14%,transparent)}
+.mu-top small{display:block;font-size:var(--fs-cap,.72rem);font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.mu-top p{margin:2px 0 0;font-size:var(--fs-callout,.95rem);line-height:1.4;font-weight:600;color:var(--navy)}
+.mu-chev{width:16px;height:16px;color:var(--muted)}
+.mu-list{list-style:none;margin:12px 0 0;padding:12px 0 0;border-top:1px solid color-mix(in srgb,var(--line) 80%,transparent);display:grid;gap:10px}
+.mu-list li{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start;animation:ssIn .5s var(--d) both}
+.mu-list span{font-size:1rem;line-height:1.35}
+.mu-list p,.mu-none{margin:0;font-size:.9rem;line-height:1.4;color:var(--ink)}
+.mu-list b{color:var(--navy)}
+.mu-none{margin-top:10px;color:var(--muted)}
+.mu-sh>p.muted{margin:-4px 0 14px}
+.mu-clock{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center;padding:14px;border-radius:18px;background:color-mix(in srgb,var(--accent) 11%,var(--card));animation:ssIn .5s .05s both}
+.mu-type{display:grid;place-items:center;gap:4px;text-align:center}
+.mu-type i{font-style:normal;font-size:2.4rem;line-height:1;animation:muBob 3s ease-in-out infinite}
+.mu-type b{font-weight:800;color:var(--navy)}
+@keyframes muBob{50%{transform:translateY(-4px)}}
+.mu-clock dl{margin:0;display:grid;gap:6px}
+.mu-clock dl div{display:flex;justify-content:space-between;gap:8px;font-size:.86rem}
+.mu-clock dt{color:var(--muted)}.mu-clock dd{margin:0;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+.mu-fs{display:grid;gap:10px;margin-top:12px}
+.mu-f{padding:12px 14px;border-radius:16px;background:color-mix(in srgb,var(--card) 80%,transparent);border:1px solid color-mix(in srgb,var(--line) 70%,transparent);animation:ssIn .5s var(--d) both}
+.mu-f p{margin:0;display:grid;grid-template-columns:24px 1fr;gap:8px;font-size:.9rem;line-height:1.4;color:var(--ink)}.mu-f p b{color:var(--navy)}
+.mu-cmp{display:grid;gap:5px;margin:10px 0 0 32px}
+.mu-cmp div{display:grid;grid-template-columns:78px 1fr 48px;gap:8px;align-items:center;font-size:.74rem;color:var(--muted)}
+.mu-cmp i{height:7px;border-radius:99px;background:color-mix(in srgb,var(--line) 70%,transparent);overflow:hidden}
+.mu-cmp u{display:block;height:100%;width:0;border-radius:inherit;animation:ssBar .8s cubic-bezier(.2,.9,.3,1) calc(var(--d,0s) + .25s) forwards}
+.mu-cmp u.a{background:var(--bad,#FF6B5E)}.mu-cmp u.b{background:var(--ok,#3ECF8E)}
+.mu-cmp b{text-align:right;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+.mu-foot{margin:12px 0 14px;font-size:.74rem;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.mu-list li,.mu-clock,.mu-f,.mu-type i{animation:none}.mu-cmp u{animation:none;width:var(--w)}}
+
+</style>
+<style>
+.demo-pill{all:unset;box-sizing:border-box;cursor:pointer;position:absolute;z-index:60;left:50%;top:calc(var(--safe-t,0px) + 52px);transform:translateX(-50%);display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;font:700 .78rem/1 Manrope,system-ui,sans-serif;color:#fff;background:rgba(20,26,52,.72);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 6px 18px rgba(0,0,0,.25);animation:scPop .5s cubic-bezier(.3,1.5,.5,1) both}
+.demo-pill i{width:7px;height:7px;border-radius:50%;background:#FF6B5E;box-shadow:0 0 0 0 rgba(255,107,94,.6);animation:demoRec 1.6s infinite}
+.demo-pill b{color:#FFD27A}
+.demo-pill:active{transform:translateX(-50%) scale(.95)}
+@keyframes demoRec{70%{box-shadow:0 0 0 7px rgba(255,107,94,0)}100%{box-shadow:0 0 0 0 rgba(255,107,94,0)}}
+.demo-card{display:flex;align-items:center;gap:12px;justify-content:space-between;margin:0 0 16px;padding:12px 14px;border-radius:16px;background:color-mix(in srgb,var(--accent) 12%,var(--card))}
+.demo-card.on{background:color-mix(in srgb,#FF6B5E 14%,var(--card))}
+.demo-card strong{display:block;color:var(--navy);font-size:.95rem}.demo-card small{color:var(--muted);font-size:.8rem;line-height:1.3;display:block}
+.demo-card .btn{flex:none;width:auto}
+.demo-cta{margin-top:12px;text-align:center}.demo-cta small{display:block;margin-top:6px;color:var(--muted);font-size:.78rem}
+.demo-go svg{width:18px;height:18px}
+@media (prefers-reduced-motion:reduce){.demo-pill,.demo-pill i{animation:none}}
+
+</style>
 </head>
 <body>
 <div id="device" class="device">
@@ -5334,6 +5388,155 @@ render(); setInterval(() => { if (!holding && !$('#sheet').open) render(true); }
   const _cs = window.closeSheet; window.closeSheet = function () { document.getElementById('sheet').classList.remove('ss-morph', 'ss-done'); return _cs.apply(this, arguments); };
   addEventListener('sa-score', open);
   window.openScoreStats = open;
+})();
+
+</script>
+<script>
+'use strict';
+/* Offline – „Dein Muster“: persönliche Schlafanalyse aus den eigenen Nächten.
+   Bewusst knapp: Karte im Verlauf = Körperuhr + die 2 stärksten Zusammenhänge. Tippen → Details.
+   Alles wird lokal berechnet (Gruppenvergleiche der eigenen Nächte, keine Annahmen von außen). */
+(function () {
+  const avg = a => a.reduce((x, y) => x + y, 0) / a.length;
+  const bro = () => (S.settings.tone || 'bro') === 'bro';
+  const WDL = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+  const wd = n => new Date(n.date + 'T12:00').getDay();
+  const free = n => { const d = wd(n); return d === 6 || d === 0; }; // Nacht auf Sa / So
+  const mid = n => { const b = rel(toMin(n.bed)), o = rel(toMin(n.out)); return (b + ((o - b + 1440) % 1440) / 2) % 1440; };
+  const clock = r => fromMin((r + 18 * 60) % 1440);
+  const durS = m => dur(Math.round(Math.abs(m) / 5) * 5);
+
+  /* Vergleich zweier Gruppen: nur wenn beide genug Nächte haben und der Unterschied spürbar ist */
+  function cmp(ns, test, minN = 2) {
+    const a = ns.filter(test), b = ns.filter(n => !test(n)); if (a.length < minN || b.length < minN) return null;
+    const ta = avg(a.map(n => calc(n).tst)), tb = avg(b.map(n => calc(n).tst)); return { ta, tb, d: ta - tb, na: a.length, nb: b.length };
+  }
+
+  function analyse() {
+    const ns = sorted().slice(-42); if (ns.length < 4) return null;
+    const need = S.settings.need * 60, B = bro(), F = [];
+    // 1) Handy am Abend / im Bett
+    const ph = cmp(ns, n => (n.phoneMin != null ? n.phoneMin >= 30 : !!n.screen));
+    if (ph && ph.d < -20) F.push({ k: 'phone', ic: '📱', w: -ph.d, a: ['Mit Handy', ph.ta], b: ['Ohne', ph.tb],
+      t: B ? `Mit Handy im Bett schläfst du <b>${durS(ph.d)} weniger</b>. Jede Nacht. Der Feed ist es nicht wert.` : `Mit Handy im Bett schläfst du im Schnitt <b>${durS(ph.d)} weniger</b>.` });
+    // 2) Koffein nach 14 Uhr
+    const cf = cmp(ns, n => !!n.caffeine);
+    if (cf && cf.d < -20) F.push({ k: 'coffee', ic: '☕', w: -cf.d, a: ['Mit Koffein', cf.ta], b: ['Ohne', cf.tb],
+      t: B ? `Nachmittags-Kaffee kostet dich <b>${durS(cf.d)} Schlaf</b>. Teuerster Kaffee deines Lebens.` : `Mit Koffein nach 14 Uhr schläfst du <b>${durS(cf.d)} weniger</b>.` });
+    // 3) Früh vs. spät ins Bett (Schwelle = dein eigener Median)
+    const bs = ns.map(n => rel(toMin(n.bed))).sort((x, y) => x - y), med = bs[Math.floor(bs.length / 2)], cut = Math.ceil(med / 15) * 15;
+    const bd = cmp(ns, n => rel(toMin(n.bed)) < cut);
+    if (bd && bd.d > 20) F.push({ k: 'bed', ic: '🌙', w: bd.d, a: [`Vor ${clock(cut)}`, bd.ta], b: ['Später', bd.tb],
+      t: B ? `Vor ${clock(cut)} im Bett = <b>${durS(bd.d)} mehr Schlaf</b>. Die Uni fängt nämlich nicht später an, nur weil du später pennst.` : `Wenn du vor ${clock(cut)} im Bett bist, schläfst du <b>${durS(bd.d)} länger</b>.` });
+    // 4) Sozialer Jetlag: Schlafmitte Wochenende vs. Woche
+    const fr = ns.filter(free), wk = ns.filter(n => !free(n)); let jet = null;
+    if (fr.length >= 2 && wk.length >= 2) { jet = avg(fr.map(mid)) - avg(wk.map(mid)); if (Math.abs(jet) >= 45) F.push({ k: 'jet', ic: '✈️', w: Math.abs(jet) * .8,
+      t: B ? `Am Wochenende verschiebt sich deine Körperuhr um <b>${durS(jet)}</b>. Das ist Jetlag – nur ohne Urlaub.` : `Am Wochenende verschiebt sich deine Schlafmitte um <b>${durS(jet)}</b> (sozialer Jetlag). Montags fühlt sich das wie Zeitverschiebung an.` }); }
+    // 5) Schwächster Wochentag (mind. 2 Nächte)
+    const by = {}; ns.forEach(n => { (by[wd(n)] = by[wd(n)] || []).push(calc(n).tst); });
+    const days = Object.entries(by).filter(([, v]) => v.length >= 2).map(([d, v]) => [Number(d), avg(v)]);
+    if (days.length >= 3) { const all = avg(ns.map(n => calc(n).tst)), w = days.reduce((a, b) => b[1] < a[1] ? b : a); const nightOf = WDL[(w[0] + 6) % 7];
+      if (all - w[1] > 30) F.push({ k: 'day', ic: '📅', w: (all - w[1]) * .9, t: B ? `Die Nacht auf ${WDL[w[0]]} ist dein Endgegner: nur <b>${dur(Math.round(w[1]))}</b>. ${nightOf}abend früher Schluss machen.` : `In der Nacht auf ${WDL[w[0]]} schläfst du am wenigsten (<b>${dur(Math.round(w[1]))}</b>). Plane ${nightOf}abend bewusst früher.` }); }
+    // 6) Deine besten Nächte
+    const good = ns.filter(n => (n.q || 0) >= 4);
+    if (good.length >= 2) { const gb = avg(good.map(n => rel(toMin(n.bed)))), gt = avg(good.map(n => calc(n).tst));
+      F.push({ k: 'best', ic: '⭐', w: 15, t: B ? `Deine besten Nächte starten um <b>${clock(Math.round(gb / 5) * 5)}</b> und gehen ${dur(Math.round(gt))}. Du weißt also, wie's geht.` : `Deine besten Nächte beginnen im Schnitt um <b>${clock(Math.round(gb / 5) * 5)}</b> und dauern ${dur(Math.round(gt))}.` }); }
+    F.sort((a, b) => b.w - a.w);
+    // Körperuhr (Chronotyp): Schlafmitte an freien Tagen, sonst alle Nächte
+    const base = fr.length >= 2 ? fr : ns, msf = avg(base.map(mid)), ms = clock(Math.round(msf / 5) * 5), msH = (msf + 18 * 60) % 1440 / 60;
+    const type = msH < 3.5 || msH > 15 ? ['Lerche', '🐦'] : msH < 5 ? ['Mittel-Typ', '🕊️'] : ['Eule', '🦉'];
+    const ideal = fromMin(Math.round(((msf + 18 * 60) - need / 2 + 1440) % 1440 / 5) * 5);
+    const debt = Math.max(0, need - avg(ns.slice(-7).map(n => calc(n).tst)));
+    return { F, type, ms, ideal, free: fr.length >= 2, jet, n: ns.length, debt, need };
+  }
+  window.sleepPattern = analyse;
+
+  const typeLine = A => bro()
+    ? `Dein Körper will um <b>${A.ideal}</b> pennen. ${typeof wakeFor === 'function' && toMin(wakeFor(tomorrow()).t) < 8 * 60 + 1 && A.type[0] === 'Eule' ? 'Die Uni will dich früher. Rate mal, wer gewinnt.' : 'Hör öfter auf ihn.'}`
+    : `Natürliche Einschlafzeit etwa <b>${A.ideal}</b>.`;
+
+  function card() {
+    const A = analyse();
+    if (!A) return `<div class="card mu mu-wait"><div class="mu-top"><i>🧬</i><div><small>Dein Muster</small><p>Ab 4 Nächten erkennt Offline, was <b>deinen</b> Schlaf kaputt macht.</p></div></div></div>`;
+    const top = A.F.slice(0, 2);
+    return `<button class="card mu" data-mu-open>
+      <div class="mu-top"><i>${A.type[1]}</i><div><small>Dein Muster · ${A.type[0]}</small><p>${typeLine(A)}</p></div><svg class="mu-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></div>
+      ${top.length ? `<ul class="mu-list">${top.map((f, i) => `<li style="--d:${.08 + i * .08}s"><span>${f.ic}</span><p>${f.t}</p></li>`).join('')}</ul>` : `<p class="mu-none">Noch keine klaren Muster – ${A.n} Nächte, weiter eintragen.</p>`}
+    </button>`;
+  }
+
+  function sheet() {
+    const A = analyse(); if (!A) return;
+    const mx = Math.max(A.need, ...A.F.filter(f => f.a).flatMap(f => [f.a[1], f.b[1]]));
+    const bars = f => f.a ? `<div class="mu-cmp">${[f.a, f.b].map(([l, v], j) => `<div><span>${l}</span><i><u class="${v >= Math.max(f.a[1], f.b[1]) ? 'b' : 'a'}" style="--w:${(v / mx * 100).toFixed(1)}%"></u></i><b>${dur(Math.round(v))}</b></div>`).join('')}</div>` : '';
+    openSheet(`<div class="mu-sh"><h2>Dein Muster</h2><p class="muted">Aus deinen letzten ${A.n} Nächten – nur deine Daten, kein Durchschnittsmensch.</p>
+      <div class="mu-clock"><div class="mu-type"><i>${A.type[1]}</i><b>${A.type[0]}</b></div>
+        <dl><div><dt>Schlafmitte${A.free ? ' (Wochenende)' : ''}</dt><dd>${A.ms}</dd></div><div><dt>Natürlich müde</dt><dd>${A.ideal}</dd></div>${A.jet != null ? `<div><dt>Wochenend-Jetlag</dt><dd>${Math.abs(A.jet) < 15 ? 'keiner' : (A.jet > 0 ? '+' : '−') + durS(A.jet)}</dd></div>` : ''}<div><dt>Schlafschuld / Nacht</dt><dd>${A.debt < 10 ? 'keine' : durS(A.debt)}</dd></div></dl></div>
+      ${A.F.length ? `<div class="mu-fs">${A.F.slice(0, 5).map((f, i) => `<div class="mu-f" style="--d:${.1 + i * .07}s"><p><span>${f.ic}</span>${f.t}</p>${bars(f)}</div>`).join('')}</div>` : '<p class="muted">Noch keine klaren Zusammenhänge. Trag weiter ein – und markier Handy/Koffein im Check-in, dann wird es spannend.</p>'}
+      <p class="mu-foot">Vergleiche deiner eigenen Nächte, keine Diagnose. Je mehr Nächte, desto genauer.</p>
+      <button class="btn full" data-act="close">Alles klar</button></div>`);
+    try { buzz([8, 30, 8]); } catch (e) { }
+  }
+  window.openPattern = sheet;
+  document.addEventListener('click', e => { if (e.target.closest('[data-mu-open]')) sheet(); });
+
+  /* Im Verlauf: „Größter Hebel“-Karte durch „Dein Muster“ ersetzen (der Hebel steht weiter in den Score-Details) */
+  const _vv = window.vVerlauf;
+  window.vVerlauf = function () {
+    const h = _vv.apply(this, arguments), i = h.indexOf('<div class="card vh">');
+    if (i < 0) return S.nights.length ? h : h; const j = h.indexOf('</div></div>', i) + 12;
+    return h.slice(0, i) + card() + h.slice(j);
+  };
+})();
+
+</script>
+<script>
+'use strict';
+/* Offline – Demo-Modus: Beispieldaten mit einem Tipp, echte Daten werden vorher gesichert
+   und mit „Demo beenden“ wiederhergestellt. Ideal zum Herzeigen. */
+(function () {
+  const _demo = window.demo;
+  window.demo = function () {
+    if (!S.demo) S.demo = { nights: JSON.stringify(S.nights || []), ruhe: JSON.stringify(S.ruhe || {}) };
+    _demo.apply(this, arguments);
+    toast('Demo läuft – deine echten Daten sind sicher 🎬');
+  };
+  window.endDemo = function () {
+    if (!S.demo) return;
+    try { S.nights = JSON.parse(S.demo.nights); S.ruhe = JSON.parse(S.demo.ruhe); } catch (e) { }
+    delete S.demo; save(); closeSheet(); render(); toast('Demo beendet – deine Daten sind zurück');
+  };
+  const btn = (cls = 'light') => `<button class="btn ${cls} full demo-go" data-act="demo">${window.ICON ? ICON('sparkles') : '✨'}Beispieldaten ansehen</button>`;
+
+  /* Sichtbarer Schalter oben, solange die Demo läuft */
+  function pill() {
+    let p = document.getElementById('demoPill');
+    if (!S.demo || (typeof ob !== 'undefined' && ob)) { if (p) p.remove(); return; }
+    if (!p) { p = document.createElement('button'); p.id = 'demoPill'; p.className = 'demo-pill'; p.innerHTML = '<i></i>Demo · <b>Beenden</b>'; p.onclick = () => { try { buzz(10); } catch (e) { } endDemo(); }; document.getElementById('device').appendChild(p); }
+  }
+  const _r = window.render;
+  window.render = function () { const r = _r.apply(this, arguments); try { pill(); } catch (e) { } return r; };
+
+  /* Leere Startseite / leerer Verlauf: Demo direkt anbieten */
+  const _vh = window.vHeute;
+  window.vHeute = function () { const h = _vh.apply(this, arguments); return S.nights.length ? h : h + `<div class="demo-cta">${btn()}<small>Zeigt die App mit 10 Beispielnächten – deine Daten bleiben unberührt.</small></div>`; };
+  const _vv = window.vVerlauf;
+  window.vVerlauf = function () { const h = _vv.apply(this, arguments); return S.nights.length ? h : h.replace('<button class="btn accent full" data-act="checkin">', btn('light') + '<button class="btn accent full" data-act="checkin">'); };
+
+  /* Einstellungen: Demo-Knopf oben als eigene Karte */
+  const _ss = window.settingsSheet;
+  window.settingsSheet = function () {
+    _ss.apply(this, arguments);
+    const d = document.getElementById('sheet'), old = d.querySelector('[data-act="demo"]'); if (old) old.remove();
+    const h2 = d.querySelector('h2 + p') || d.querySelector('h2'); if (!h2) return;
+    const c = document.createElement('div'); c.className = 'demo-card' + (S.demo ? ' on' : '');
+    c.innerHTML = S.demo
+      ? `<div><strong>🎬 Demo läuft</strong><small>Du siehst Beispieldaten. Deine echten Nächte sind gesichert.</small></div><button class="btn sm" data-demo-end>Beenden</button>`
+      : `<div><strong>🎬 Demo-Modus</strong><small>App mit Beispieldaten zeigen – deine Daten bleiben sicher.</small></div><button class="btn sm accent" data-act="demo">Starten</button>`;
+    h2.after(c);
+  };
+  document.addEventListener('click', e => { if (e.target.closest('[data-demo-end]')) endDemo(); });
+  addEventListener('load', pill);
 })();
 
 </script>
