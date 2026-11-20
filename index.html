@@ -1887,6 +1887,24 @@ html.night .sc-dot{box-shadow:0 6px 20px rgba(0,0,0,.35),inset 0 0 0 1px rgba(25
 @media (prefers-reduced-motion:reduce){.demo-pill,.demo-pill i{animation:none}}
 
 </style>
+<style>
+.qc-times{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+.qc-times i{flex:0 0 26px;height:2px;border-radius:2px;background:linear-gradient(90deg,#8FA4FF,#FFC46B)}
+.qc-times em{margin-left:auto;font-style:normal;font-weight:600;font-size:.8rem;color:var(--muted)}
+.qc h2{margin:6px 0 12px}
+.qc-tiles .tile{min-height:96px}
+.qc-tiles .tile.on{outline:2.5px solid var(--accent);outline-offset:-2.5px}
+.qc-more.show{animation:ssIn .4s both}
+.qc-lab{margin:4px 0 8px;font-size:.74rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.qc-feel{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px}
+.qc-feel button{all:unset;cursor:pointer;text-align:center;font-size:1.6rem;padding:8px 0;border-radius:14px;background:color-mix(in srgb,var(--card) 85%,transparent);transition:transform .15s}
+.qc-feel button.on{background:color-mix(in srgb,var(--accent) 22%,var(--card));transform:scale(1.08)}
+.qc-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.qc-chips button,.qc-chips span{all:unset;cursor:pointer;padding:8px 12px;border-radius:999px;font-size:.86rem;font-weight:700;color:var(--navy);background:color-mix(in srgb,var(--card) 85%,transparent);border:1px solid color-mix(in srgb,var(--line) 80%,transparent)}
+.qc-chips .on{background:color-mix(in srgb,var(--accent) 20%,var(--card));border-color:var(--accent)}
+.qc-full{all:unset;cursor:pointer;display:block;margin:12px auto 0;font-size:.84rem;font-weight:600;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+
+</style>
 </head>
 <body>
 <div id="device" class="device">
@@ -5540,6 +5558,73 @@ render(); setInterval(() => { if (!holding && !$('#sheet').open) render(true); }
   };
   document.addEventListener('click', e => { if (e.target.closest('[data-demo-end]')) endDemo(); });
   addEventListener('load', pill);
+})();
+
+</script>
+<script>
+'use strict';
+/* Offline – Schnell-Check-in: Wer abends „Ich gehe jetzt schlafen“ gedrückt hat, wird morgens nicht mehr nach
+   Uhrzeiten gefragt. Bettzeit kommt aus dem Schlafmodus, Aufstehzeit = jetzt (bzw. Wecker). Nur noch: Wie war's? */
+(function () {
+  const Q = [
+    ['ok', '😴', 'Normal', 'durchgeschlafen', { lat: 15, waso: 0 }],
+    ['late', '🌀', 'Schwer eingeschlafen', 'lange wach gelegen', { lat: 50, waso: 0 }],
+    ['wake', '💭', 'Nachts wach', 'öfter aufgewacht', { lat: 15, waso: 50 }],
+    ['bad', '😵', 'Kaum geschlafen', 'echt mies', { frac: .55 }]
+  ];
+  const F = [[1, '😫'], [2, '😕'], [3, '😐'], [4, '🙂'], [5, '😄']];
+  let Z = null;
+  const outTime = () => { const now = toMin(nowHM()), w = toMin(typeof wakeFor === 'function' ? wakeFor(new Date()).t : S.settings.wake);
+    if (S.wakeNow && S.wakeNow.date === todayKey()) return S.wakeNow.t; // „Bin wach“ aus den Serien
+    return now >= 3 * 60 && now <= 14 * 60 && Math.abs(now - w) <= 180 ? nowHM() : fromMin(w); };
+
+  function quick() {
+    const pf = S.ruhe && S.ruhe.pfNight === todayKey();
+    Z = { bed: S.session.bed, out: outTime(), k: null, q: null, caffeine: false, screen: false, pf };
+    const bro = (S.settings.tone || 'bro') === 'bro';
+    openSheet(`<div class="qc"><p class="qc-times"><span>🌙 ${Z.bed}</span><i></i><span>☀️ ${Z.out}</span><em>${dur(span(Z.bed, Z.out))} im Bett</em></p>
+      <h2>${bro ? 'Und, wie lief die Nacht?' : 'Wie war deine Nacht?'}</h2>
+      <div class="tiles qc-tiles">${Q.map(([k, e, l, s]) => `<button class="tile" data-qc="${k}"><i>${e}</i><b>${l}</b><small>${s}</small></button>`).join('')}</div>
+      <div class="qc-more" hidden>
+        <p class="qc-lab">Wie fühlst du dich?</p><div class="qc-feel">${F.map(([v, e]) => `<button data-qcf="${v}" aria-label="Erholt ${v} von 5">${e}</button>`).join('')}</div>
+        <p class="qc-lab">Gestern Abend</p><div class="qc-chips">${pf ? '<span class="on">📵 Handyfrei ✓</span>' : '<button data-qct="screen">📱 Handy im Bett</button>'}<button data-qct="caffeine">☕ Koffein nach 14 Uhr</button></div>
+        <button class="btn accent full" data-qc-save>${I.check}Fertig</button></div>
+      <button class="qc-full" data-qc-full>Uhrzeiten ändern / genauer eintragen</button></div>`);
+  }
+  function rec() {
+    const tib = span(Z.bed, Z.out), o = Q.find(x => x[0] === Z.k)[4];
+    let tst, lat, waso;
+    if (o.frac) { tst = Math.round(tib * o.frac / 5) * 5; lat = Math.min(60, Math.round((tib - tst) / 2)); waso = Math.max(0, tib - tst - lat); }
+    else { lat = Math.min(o.lat, tib); waso = Math.min(o.waso, Math.max(0, tib - lat)); tst = Math.max(0, tib - lat - waso); }
+    return { date: todayKey(), bed: Z.bed, out: Z.out, wake: Z.out, tst, lat, waso, q: Z.q ?? ({ ok: 4, late: 3, wake: 3, bad: 2 })[Z.k], caffeine: Z.caffeine, screen: Z.screen, phoneMin: Z.pf ? 0 : null, quick: true };
+  }
+  function saveQ() {
+    const r = rec(), before = streakSnapshot();
+    S.nights = S.nights.filter(x => x.date !== r.date).concat(r); S.session = null; save();
+    sheetDone('Eingetragen', `${dur(r.tst)} Schlaf · 5 Sekunden, fertig.`);
+    celebrateStreaks(before);
+  }
+
+  /* Check-in: mit Schlafmodus → Schnell-Check-in, sonst wie bisher */
+  const _wz = window.wizard;
+  window.wizard = function (full) { if (S.session && full !== true) return quick(); return _wz.apply(this, arguments); };
+
+  document.addEventListener('click', e => {
+    const t = e.target.closest('[data-qc],[data-qcf],[data-qct],[data-qc-save],[data-qc-full]'); if (!t || !Z) return;
+    try { buzz(8); } catch (x) { }
+    if (t.dataset.qc) { Z.k = t.dataset.qc; t.parentElement.querySelectorAll('.tile').forEach(b => b.classList.toggle('on', b === t));
+      const m = document.querySelector('.qc-more'); if (m.hidden) { m.hidden = false; m.classList.add('show'); } return; }
+    if (t.dataset.qcf) { Z.q = Number(t.dataset.qcf); t.parentElement.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === t)); return; }
+    if (t.dataset.qct) { const k = t.dataset.qct; Z[k] = !Z[k]; t.classList.toggle('on', Z[k]); return; }
+    if ('qcSave' in t.dataset) { if (Z.k) saveQ(); return; }
+    if ('qcFull' in t.dataset) { closeSheet(); setTimeout(() => window.wizard(true), 260); }
+  });
+
+  const _vh = window.vHeute;
+  window.vHeute = function () { const h = _vh.apply(this, arguments); return S.session ? h.replace('Check-in starten · 20 Sek.', 'Wie war die Nacht? · 5 Sek.') : h; };
+
+  /* Nach dem Wecker („Ich bin wach“): Schnell-Check-in direkt anbieten */
+  document.addEventListener('click', e => { if (e.target.closest('#yes') && S.session && !S.nights.some(n => n.date === todayKey())) setTimeout(() => { if (S.session) quick(); }, 1400); });
 })();
 
 </script>
