@@ -1292,6 +1292,10 @@ html:not(.night) .stp.on{color:#3A2A08}
 .skydark .top [data-act=settings]{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.25)}
 .skydark .top [data-act=settings] svg{color:#fff}
 
+/* Schriftzug „Offline“: „line“ in Blau */
+.brand .brand-acc{font-weight:800;color:#2348B8;-webkit-text-fill-color:#2348B8}
+.skydark .brand .brand-acc,.night .brand .brand-acc{color:#AFC4FF;-webkit-text-fill-color:#AFC4FF}
+
 </style>
 <style>
 /* Schlafanker – Silence (silence.js). Glas-Karten, Himmel als Hintergrund, eine Hauptaktion. */
@@ -1555,6 +1559,16 @@ html:not(.night) .stp.on{color:#3A2A08}
 .st-do:active{transform:scale(.94)}
 .st-do.ok{background:color-mix(in srgb,var(--ok) 16%,var(--card));color:var(--ok);box-shadow:none;cursor:default}
 
+/* Aufwachen beim Beenden */
+.sil-art.waking{--p:0}
+.sil-art.waking .blk{transition:transform .7s cubic-bezier(.3,1.4,.5,1)}
+.sil-art.waking .scr{opacity:1;filter:drop-shadow(0 0 8px rgba(160,190,255,.9));transition:opacity .4s .25s}
+.sil-art.waking .ph{transform-origin:60px 90px;animation:silWake .9s .35s cubic-bezier(.3,1.6,.5,1) both}
+.sil-art.waking .zz text{animation:none;opacity:0}
+@keyframes silWake{0%{transform:none}35%{transform:translateY(-9px) rotate(-4deg)}65%{transform:translateY(-3px) rotate(3deg)}100%{transform:none}}
+.sil-ov.waking .sil-glow{background:radial-gradient(circle,rgba(255,206,140,.45),transparent 70%)!important;transition:background .8s}
+.sil-ov.waking .sil-t{color:#FFE2A8;transition:color .6s}
+
 </style>
 <style>
 /* Schlafanker – Verlauf-Tab (verlauf.js). Glas-Karten, Farben über Variablen, Tag/Nacht. */
@@ -1708,10 +1722,93 @@ html:not(.night) .stp.on{color:#3A2A08}
 .vm-say{margin:12px 0 0;font-size:var(--fs-callout);line-height:1.45;color:var(--ink-2)}
 .vm-say b{color:var(--navy)}
 
+
+/* ---------- Graphen ---------- */
+.vg{--vg-ok:#2F9467;--vg-lo:#D2652E;--vg-bed:#6250D6;--vg-out:#D9622B;--vg-ph:#2A78D6;--vg-md:#C2408A;--vg-sc:var(--accent);--vg-ink:color-mix(in srgb,var(--navy) 62%,transparent)}
+.night .vg{--vg-ok:#36A574;--vg-lo:#E06A2E;--vg-bed:#9085E9;--vg-out:#E06A2E;--vg-ph:#4A90EA;--vg-md:#D8609F}
+.vg-tabs{display:flex;gap:6px;margin:10px 0 4px;overflow-x:auto;scrollbar-width:none}
+.vg-tabs button{all:unset;box-sizing:border-box;flex:1;min-height:36px;padding:7px 10px;text-align:center;border-radius:999px;font-size:var(--fs-foot);font-weight:700;color:var(--ink-2);background:color-mix(in srgb,var(--navy) 6%,transparent);border:1px solid transparent;cursor:pointer;transition:background .2s,color .2s,transform .2s var(--spring);-webkit-tap-highlight-color:transparent}
+.vg-tabs button:active{transform:scale(.95)}
+.vg-tabs button.on{background:var(--navy);color:var(--card)}
+.night .vg-tabs button.on{background:#F2F4FA;color:#14213F}
+.vg-tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.vg-box{min-height:240px}
+.vg-sub{margin:10px 0 8px;font-size:var(--fs-foot);line-height:1.45;color:var(--muted)}
+.vg-sub b{color:var(--navy)}
+.vg-leg{display:flex;flex-wrap:wrap;gap:4px 12px;margin:0 0 6px}
+.vg-k{display:inline-flex;align-items:center;gap:5px;font-size:var(--fs-cap);font-weight:700;color:var(--muted)}
+.vg-k i{flex:none;display:inline-block}
+.vg-k i.vk-sw{width:10px;height:10px;border-radius:3px;background:var(--c)}
+.vg-k i.vk-dot{width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 0 2px var(--card)}
+.vg-k i.vk-ln{width:14px;height:0;border-top:2px solid var(--c)}
+.vg-k i.vk-ln.vk-dash,.vg-k i.vk-ln.goal{border-top-style:dashed}
+.c-ok{--c:var(--vg-ok)}.c-lo{--c:var(--vg-lo)}.c-ph{--c:var(--vg-ph)}.c-md{--c:var(--vg-md)}.c-sc{--c:var(--vg-sc)}.s-bed{--c:var(--vg-bed)}.s-out{--c:var(--vg-out)}
+.vg-k i.goal{--c:var(--accent)}.vg-k i.avg{--c:var(--vg-ink)}
+.vg-wrap{position:relative;touch-action:pan-y;-webkit-user-select:none;user-select:none}
+.vg-svg{display:block;width:100%;height:auto;overflow:visible;font-family:inherit;outline:none;-webkit-tap-highlight-color:transparent;cursor:crosshair}
+.vg-svg:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:8px}
+.vg-g{stroke:color-mix(in srgb,var(--navy) 10%,transparent);stroke-width:1}
+.vg-yt{font-size:10.5px;font-weight:700;fill:var(--muted);text-anchor:end;font-variant-numeric:tabular-nums}
+.vg-yt.u{font-weight:600;font-size:10px}
+.vg-xt{font-size:10.5px;font-weight:700;fill:var(--muted);font-variant-numeric:tabular-nums}
+.vg-xt.now{fill:var(--navy)}
+.vg-bar{fill:var(--c);transform-box:fill-box;transform-origin:50% 100%;animation:vgGrow .6s var(--ease) backwards;animation-delay:calc(var(--i) * 22ms + 80ms);transition:opacity .15s}
+.vg-svg:has(.vg-bar.on) .vg-bar:not(.on){opacity:.55}
+.vg-zero{fill:var(--vg-ph);opacity:.6}
+@keyframes vgGrow{from{transform:scaleY(0)}}
+.vg-ref{stroke-width:1.5;stroke-dasharray:5 4;stroke-linecap:round}
+.vg-ref.goal{stroke:var(--accent)}
+.vg-ref.avg{stroke:var(--vg-ink);stroke-dasharray:none;stroke-width:1.25}
+.vg-ref.s-bed,.vg-ref.s-out{stroke:var(--c);opacity:.75}
+.vg-rl{font-size:10.5px;font-weight:800;fill:var(--ink-2);paint-order:stroke;stroke:var(--card);stroke-width:3px;stroke-linejoin:round;font-variant-numeric:tabular-nums}
+.vg-line{fill:none;stroke:var(--c);stroke-width:2;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:1;animation:vgDraw .9s var(--ease) .15s backwards}
+@keyframes vgDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+.vg-dot{fill:var(--c);stroke:var(--card);stroke-width:2;animation:vgFade .4s var(--ease) backwards;animation-delay:calc(var(--i) * 22ms + 300ms);transition:r .15s}
+.vg-dot.on{r:6px}
+.vg-dot.end{r:5px}
+@keyframes vgFade{from{opacity:0}}
+.vg-span{fill:color-mix(in srgb,var(--vg-bed) 11%,transparent);animation:vgFade .6s var(--ease) .2s backwards}
+.vg-span1{stroke:color-mix(in srgb,var(--vg-bed) 18%,transparent);stroke-width:8;stroke-linecap:round}
+.vg-area{fill:color-mix(in srgb,var(--vg-sc) 14%,transparent);animation:vgFade .7s var(--ease) .3s backwards}
+.vg-end{font-size:12px;font-weight:800;fill:var(--navy);paint-order:stroke;stroke:var(--card);stroke-width:3px}
+.vg-x{stroke:color-mix(in srgb,var(--navy) 35%,transparent);stroke-width:1;pointer-events:none}
+.vg-x[hidden]{display:none}
+.vg-hit{fill:transparent}
+.vg-mini{margin:10px 0 2px;font-size:var(--fs-cap);font-weight:800;color:var(--ink-2)}
+.vg-tip{position:absolute;top:4px;left:0;z-index:5;min-width:120px;max-width:210px;padding:7px 10px 6px;border-radius:12px;background:color-mix(in srgb,var(--card) 94%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--edge);box-shadow:var(--hl),0 10px 26px -10px rgba(10,20,50,.45);display:flex;flex-direction:column;gap:2px;pointer-events:none;animation:vgTip .18s var(--ease)}
+.vg-tip[hidden]{display:none}
+@keyframes vgTip{from{opacity:0;transform:translateY(4px)}}
+.vg-td{font-size:var(--fs-cap);font-weight:800;color:var(--muted);margin-bottom:1px}
+.vg-tr{display:grid;grid-template-columns:12px auto 1fr;align-items:baseline;gap:6px;line-height:1.25}
+.vg-tr strong{font-size:var(--fs-foot);color:var(--navy);font-variant-numeric:tabular-nums;white-space:nowrap}
+.vg-tr small{font-size:var(--fs-cap);color:var(--muted);font-weight:600}
+.vg-tr .lk{width:12px;height:0;border-top:2px solid var(--c);align-self:center}
+.vg-tr .lk.none{border-color:transparent}
+.vg-tr.none{display:block;font-size:var(--fs-foot);color:var(--muted);font-weight:600}
+.vg-edit{all:unset;pointer-events:auto;margin-top:2px;align-self:flex-start;font-size:var(--fs-cap);font-weight:800;color:var(--accent-d);cursor:pointer;padding:4px 0}
+.vg-edit:focus-visible{outline:2px solid var(--accent);border-radius:4px}
+.vg .vb-hint{margin-top:8px}
+.vg-tab{margin-top:8px}
+.vg-tab summary{cursor:pointer;font-size:var(--fs-cap);font-weight:800;color:var(--accent-d);list-style:none;padding:4px 0}
+.vg-tab summary::-webkit-details-marker{display:none}
+.vg-tab summary::before{content:"▸ "}.vg-tab[open] summary::before{content:"▾ "}
+.vg-tw{max-height:220px;overflow:auto;margin-top:4px;border-radius:10px;border:1px solid var(--line)}
+.vg-tab table{width:100%;border-collapse:collapse;font-size:var(--fs-foot);font-variant-numeric:tabular-nums}
+.vg-tab th,.vg-tab td{padding:6px 10px;text-align:left;border-bottom:1px solid var(--line);color:var(--ink-2)}
+.vg-tab th{font-size:var(--fs-cap);color:var(--muted);font-weight:800;position:sticky;top:0;background:var(--card)}
+.vg-tab td:first-child{color:var(--navy);font-weight:700}
+.vg-empty{text-align:center;padding:10px 6px 4px}
+.vg-empty p{margin:6px 0 0;color:var(--muted);font-size:var(--fs-foot);line-height:1.5}
+.vg-ghost{width:200px;max-width:70%;height:auto;display:block;margin:6px auto 0}
+.vg-ghost path{fill:color-mix(in srgb,var(--accent) 26%,transparent);transform-box:fill-box;transform-origin:50% 100%;animation:vgGrow .7s var(--ease) backwards,vbShim 2.6s ease-in-out 1s infinite;animation-delay:calc(var(--i) * 90ms)}
+.vg-box.still *{animation:none!important}
+
 @media (prefers-reduced-motion:reduce){
   .vb-row,.vb-bar,.vs-line svg,.vs-line>i,.vs-tr i,.vm-plot>i,.vb-ghost i,#vrBody.swap>.card{animation:none!important}
   .vs-line>i.last::after{display:none}
   .vb-row{transition:none}
+  .vg-bar,.vg-line,.vg-dot,.vg-span,.vg-area,.vg-tip,.vg-ghost path{animation:none!important}
+  .vg-dot,.vg-bar,.vg-tabs button{transition:none}
 }
 
 </style>
@@ -1769,6 +1866,35 @@ a.btn.iw-go,.iw a.btn{text-decoration:none}
 .iw-steps b{color:var(--navy)}
 
 </style>
+<style>
+/* Score-Statistik */
+.ss{text-align:center}
+.ss-ring{position:relative;width:150px;height:150px;margin:4px auto 6px}
+.ss-ring svg{width:150px;height:150px;transform:rotate(-90deg)}
+.ss-ring circle{fill:none;stroke-width:11;stroke-linecap:round}
+.ss-ring .bg{stroke:color-mix(in srgb,var(--line) 80%,transparent)}
+.ss-ring .fg{stroke:url(#ssg);stroke-dasharray:var(--c);stroke-dashoffset:var(--c);animation:ssRing 1s cubic-bezier(.2,.9,.3,1) .1s forwards;filter:drop-shadow(0 4px 10px rgba(140,168,240,.5))}
+@keyframes ssRing{to{stroke-dashoffset:var(--o)}}
+.ss-ring>div{position:absolute;inset:0;display:grid;place-content:center}
+.ss-ring b{font-size:2.9rem;font-weight:800;color:var(--navy);letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.ss-ring small{font-size:.66rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.ss-trend{margin:0 0 14px;font-weight:700;font-size:.9rem;color:var(--muted);animation:ssIn .5s .35s both}
+.ss-trend.up{color:var(--ok)}.ss-trend.down{color:var(--bad)}
+.ss-bars{display:grid;gap:10px;text-align:left}
+.ss-row{display:grid;grid-template-columns:118px 1fr 30px 26px;align-items:center;gap:8px;animation:ssIn .5s var(--d) both}
+.ss-row span{font-weight:700;color:var(--navy);font-size:.9rem;line-height:1.15}
+.ss-row span small{display:block;font-weight:600;font-size:.72rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.ss-row i{height:10px;border-radius:999px;background:color-mix(in srgb,var(--line) 70%,transparent);overflow:hidden}
+.ss-row u{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#8CA8F0,#B79CFF);animation:ssBar .9s cubic-bezier(.2,.9,.3,1) var(--d) forwards}
+@keyframes ssBar{to{width:var(--w)}}
+.ss-row b{text-align:right;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+.ss-row em{font-style:normal;font-size:.75rem;color:var(--muted)}
+.ss-tip{margin-top:16px;padding:12px 14px;border-radius:16px;text-align:left;background:color-mix(in srgb,var(--warn) 14%,var(--card));animation:ssIn .5s var(--d) both}
+.ss-tip strong{display:block;color:var(--navy);font-size:.95rem}.ss-tip span{font-size:.88rem;color:var(--ink)}
+@keyframes ssIn{from{opacity:0;transform:translateY(8px)}}
+@media (prefers-reduced-motion:reduce){.ss-ring .fg{animation:none;stroke-dashoffset:var(--o)}.ss-row u{animation:none;width:var(--w)}.ss-row,.ss-trend,.ss-tip{animation:none}}
+
+</style>
 </head>
 <body>
 <div id="device" class="device">
@@ -1790,7 +1916,8 @@ const OB_PROBLEMS = [
   ['wakeups', '🌗', 'Ich wache nachts auf'],
   ['early', '🌅', 'Ich wache viel zu früh auf'],
   ['morning', '🧟', 'Ich komme morgens nicht hoch'],
-  ['chaos', '🎢', 'Mein Rhythmus ist komplett chaotisch']
+  ['chaos', '🎢', 'Mein Rhythmus ist komplett chaotisch'],
+  ['doom', '📱', 'Ich penn nicht, weil ich doomscrolle']
 ];
 const OB_HABITS = [
   ['coffee', '☕', 'Kaffee / Energy am Nachmittag'],
@@ -1913,6 +2040,7 @@ function finishOnboarding() {
   S.profile = { name: d.name, problems: d.problems, habits: d.habits, type: d.type, since: todayKey() };
   S.settings.wake = d.wake; S.settings.task = d.task; S.uni = d.uni; S.settings.level = S.settings.level || 'easy';
   if (d.habits.includes('shift')) S.settings.noRestrict = true;
+  if (d.problems.includes('doom')) { S.ruhe = S.ruhe || {}; S.ruhe.level = S.ruhe.level === 'soft' || !S.ruhe.level ? 'strict' : S.ruhe.level; }
   if (d.type === 'owl') S.settings.windDown = Math.max(S.settings.windDown, 60);
   if (ob.scene) ob.scene.unmount();
   save(); ob = null; document.documentElement.classList.remove('ob-mode'); $('#app').innerHTML = ''; tab = 'heute'; render();
@@ -1941,6 +2069,7 @@ function personalTips(pr = S.profile) {
   if (has('problems', 'latency')) out.push(['🛏️', 'Erst müde ins Bett', 'Nicht ins Bett, nur weil es spät ist – erst wenn dir die Augen zufallen. Liegst du ~20 min wach: aufstehen, gedimmtes Licht, was Langweiliges, dann zurück.']);
   if (has('problems', 'wakeups')) out.push(['🌗', 'Nachts wach? Nicht auf die Uhr schauen', 'Uhrzeit-Checken macht Stress und hält wach. Handy umdrehen, Zimmer kühl (17–19 °C), kein Alkohol am Abend – der zerhackt die zweite Nachthälfte.']);
   if (has('problems', 'early')) out.push(['🌅', 'Zu früh wach: Bettzeit nicht vorziehen', 'Abends lieber bis zum Fenster durchhalten und abends helles Licht, morgens erst nach dem Anker raus ins Licht.']);
+  if (has('problems', 'doom')) out.push(['📵', 'Handy abends: feste handyfreie Zeit', 'Du pennst nicht, weil der Feed dich festhält. Deine Schlafenszeit ist ab jetzt handyfrei – öffnest du Social Media, kommt erst die Atempause. Leg das Handy zum Laden außer Reichweite.']);
   if (has('problems', 'morning')) out.push(['🚿', 'Morgens: Aufgabe statt Snooze', 'Der Wecker geht erst aus, wenn du die Aufgabe gelöst hast. Danach direkt Licht an, Wasser trinken, raus.']);
   if (pr.type === 'owl') out.push(['🦉', 'Als Nachteule: Licht ist dein Hebel', 'Direkt nach dem Aufstehen 15 min Tageslicht, abends ab der Routine nur warmes, gedimmtes Licht. So rutscht deine innere Uhr Schritt für Schritt nach vorne.']);
   if (pr.type === 'lark') out.push(['🐓', 'Als Frühaufsteher: Abende schützen', 'Wenn du abends früh müde wirst, gib nach – aber nicht vor deinem Fenster. Späte Bildschirm-Sessions kosten dich am meisten.']);
@@ -2155,7 +2284,7 @@ function applyPreset() { if (window.UNI_PRESET && !S.uni && !S.presetDone) { S.u
     const glit = Array.from({ length: 12 }, () => ({ x: R(), y: R(), p: R() * 6 }));
     const birds = Array.from({ length: 3 }, (_, i) => ({ o: R(), y: .14 + R() * .2, s: .6 + R() * .4 }));
     const sparks = []; let dimV = 0, lastDark = false;
-    const ripples = []; let tilt = { x: 0, y: 0 }, tgt = { x: 0, y: 0 }, visible = true;
+    const ripples = []; let tilt = { x: 0, y: 0 }, tgt = { x: 0, y: 0 }, visible = true, scoreHit = null;
     const PAD = 28; let L = { key: '' }, LT = null, TC = null;
     function size() { const r = wrap.getBoundingClientRect(); dpr = Math.min(2, devicePixelRatio || 1); W = r.width; H = r.height; cv.width = W * dpr; cv.height = H * dpr; L.key = ''; }
     size(); const ro = new ResizeObserver(() => { size(); if (RM.matches) draw(0); }); ro.observe(wrap);
@@ -2518,10 +2647,16 @@ function applyPreset() { if (window.UNI_PRESET && !S.uni && !S.presetDone) { S.u
         g = ctx.createRadialGradient(W / 2, horizon, 0, W / 2, horizon, W * .9); g.addColorStop(0, `rgba(255,222,150,${.55 * gl})`); g.addColorStop(.5, `rgba(255,180,120,${.22 * gl})`); g.addColorStop(1, 'rgba(255,180,120,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); } }
       // Score
       const txt = D.score == null ? '–' : String(Math.round(shown)), ty = D.scoreY === 0 ? -9999 : D.scoreY ? H * D.scoreY : H - 54;
-      ctx.textAlign = 'center'; ctx.font = '700 46px Manrope, system-ui, sans-serif'; try { ctx.letterSpacing = '-1.5px'; } catch (e) { }
+      // weicher Halo-Ring hinter dem Score (Mittelpunkt der Startseite, auch vor der Sonne lesbar)
+      scoreHit = ty > 0 ? { x: W / 2, y: ty - 12, r: 84 } : null;
+      if (ty > 0) { const cy = ty - 12, R = 72; g = ctx.createRadialGradient(W / 2, cy, R * .2, W / 2, cy, R * 1.35); g.addColorStop(0, 'rgba(10,18,48,.30)'); g.addColorStop(.7, 'rgba(10,18,48,.10)'); g.addColorStop(1, 'rgba(10,18,48,0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(W / 2, cy, R * 1.35, 0, 7); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,.28)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(W / 2, cy, R, 0, 7); ctx.stroke();
+        if (D.score != null) { ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.beginPath(); ctx.arc(W / 2, cy, R, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * Math.min(1, shown / 100)); ctx.stroke(); } }
+      ctx.textAlign = 'center'; ctx.font = '700 58px Manrope, system-ui, sans-serif'; try { ctx.letterSpacing = '-2px'; } catch (e) { }
       ctx.shadowColor = 'rgba(8,14,40,.38)'; ctx.shadowBlur = 18; ctx.shadowOffsetY = 2; ctx.fillStyle = '#fff'; ctx.fillText(txt, W / 2, ty);
-      ctx.shadowBlur = 8; ctx.shadowOffsetY = 0; ctx.font = '700 10.5px Manrope, system-ui, sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.88)'; try { ctx.letterSpacing = '2.6px'; } catch (e) { }
-      ctx.fillText((D.label || 'Schlaf-Score').toUpperCase(), W / 2 + 1.3, ty + 19); ctx.shadowBlur = 0; ctx.shadowColor = 'transparent'; try { ctx.letterSpacing = '0px'; } catch (e) { }
+      ctx.shadowBlur = 8; ctx.shadowOffsetY = 0; ctx.font = '700 11px Manrope, system-ui, sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.9)'; try { ctx.letterSpacing = '2.6px'; } catch (e) { }
+      ctx.fillText((D.label || 'Schlaf-Score').toUpperCase(), W / 2 + 1.3, ty + 20); ctx.shadowBlur = 0; ctx.shadowColor = 'transparent'; try { ctx.letterSpacing = '0px'; } catch (e) { }
       cv.setAttribute('aria-label', `${D.label || 'Schlaf-Score'} ${txt}`);
     }
     function loop(ts) { cancelAnimationFrame(raf); if (!visible || document.hidden) return; const dt = Math.min(.05, (ts - (last || ts)) / 1000); last = ts;
@@ -2530,7 +2665,9 @@ function applyPreset() { if (window.UNI_PRESET && !S.uni && !S.presetDone) { S.u
     const scroller = () => { const a = document.getElementById('app'); return a && a.scrollHeight > a.clientHeight + 2 && getComputedStyle(a).overflowY !== 'visible' ? a : null; };
     const onScroll = () => { const a = scroller(), y = a ? a.scrollTop : (window.scrollY || 0); tgt.x = -Math.min(1, y / 260); tgt.y = Math.min(1, y / 260); if (RM.matches) draw(0); };
     const onMove = () => { }, onLeave = () => { };
-    const onTap = e => { const r = wrap.getBoundingClientRect(), x = e.clientX - r.left, y = Math.max(r.height * .66, e.clientY - r.top);
+    const onTap = e => { const r0 = wrap.getBoundingClientRect(), sx = e.clientX - r0.left, sy = e.clientY - r0.top;
+      if (scoreHit && Math.hypot(sx - scoreHit.x, sy - scoreHit.y) < scoreHit.r) { window.dispatchEvent(new CustomEvent('sa-score')); try { navigator.vibrate?.(8); } catch (err) { } return; }
+      const r = r0, x = sx, y = Math.max(r.height * .66, sy);
       // Hügel & Bäume (über der Wasserlinie, unter dem Himmel) → „Dein Wald“
       { const ry = e.clientY - r.top, hz = r.height * (D.hz || .62); if (ry < hz + 3 && ry > Math.max(hz - 82, D.scoreY ? r.height * D.scoreY + 26 : 0)) { window.dispatchEvent(new CustomEvent('sa-forest', { detail: { x: e.clientX, y: e.clientY } })); return; } }
       ripples.push({ x, y, a: 0 });
@@ -2957,6 +3094,14 @@ function applySky() {
   const SC = { spring: [222, 120, 160], summer: [226, 150, 60], autumn: [206, 100, 50], winter: [110, 170, 220] }[se], ac = night ? [140, 168, 240] : [90, 127, 214], ad = night ? [169, 191, 247] : [59, 93, 176];
   el.style.setProperty('--accent', k.rgb(m(ac, SC, .15))); el.style.setProperty('--accent-d', k.rgb(m(ad, SC, .13))); el.style.setProperty('--sea', k.rgb(SC));
 }
+/* Schlaf-Score genau in die Mitte zwischen Begrüßung und Hauptknopf setzen */
+function centerScore() {
+  const slot = $('#orbSlot'); if (!slot || !window.Orb) return;
+  requestAnimationFrame(() => { if (document.querySelector('.sn-card')) return; const sr = slot.getBoundingClientRect(), g = $('#app .greet'), b = $('#app .view .act-main, #app .view .sn-card, #app .view .btn');
+    if (!g || !b || !sr.height) return; const mid = (g.getBoundingClientRect().bottom + b.getBoundingClientRect().top) / 2 + 22;
+    const y = (mid - sr.top) / sr.height; if (y > .15 && y < .8) Orb.update({ scoreY: y }); });
+}
+addEventListener('resize', () => { if (typeof tab !== 'undefined' && tab === 'heute') centerScore(); });
 function setHorizon() {
   const app = $('#app'), slot = $('#orbSlot');
   app.style.setProperty('--hz', slot ? (slot.getBoundingClientRect().top - app.getBoundingClientRect().top + app.scrollTop + (slot.offsetHeight || 300) * .52) + 'px' : '210px');
@@ -2972,14 +3117,14 @@ function render(quiet) {
   const v = { heute: vHeute, verlauf: vVerlauf, wecker: vWecker, ruhe: vRuhe }[tab](), app = $('#app');
   app.classList.toggle('still', !!quiet);
   const keepOrb = app.querySelector('.scene-wrap'); if (keepOrb) keepOrb.remove();
-  app.innerHTML = `<div class="top"><div class="brand">${I.moon}Offline</div><button class="btn light sm" data-act="settings" aria-label="Einstellungen">${I.gear}</button></div><div class="view" style="--dx:${viewDx}px;--dy:${viewDx ? 0 : 8}px">${v}</div>`;
+  app.innerHTML = `<div class="top"><div class="brand">${I.moon}<span>Off<b class="brand-acc">line</b></span></div><button class="btn light sm" data-act="settings" aria-label="Einstellungen">${I.gear}</button></div><div class="view" style="--dx:${viewDx}px;--dy:${viewDx ? 0 : 8}px">${v}</div>`;
   viewDx = 0;
   const tb = $('#tabbar');
   if (!tb.firstChild) tb.innerHTML = '<i class="ind" aria-hidden="true"></i>' + TABS.map(([k, l, i]) => `<button class="tab" data-tab="${k}">${i}${l}</button>`).join('');
   tb.style.setProperty('--i', TABS.findIndex(t => t[0] === tab));
   $$('.tab').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
   initPills(app); if (!quiet) countUp(app);
-  mountOrb(keepOrb); setHorizon();
+  mountOrb(keepOrb); setHorizon(); centerScore();
 }
 /* Schlaf-Planet (orb.js) auf „Heute“ */
 function mountOrb(keep) {
@@ -4308,7 +4453,7 @@ render(); setInterval(() => { if (!holding && !$('#sheet').open) render(true); }
     setTimeout(() => { try { out.disconnect(); } catch (e) { } }, 11000);
   }
   // iOS erlaubt Ton nur nach Berührung: beim Drücken des Halte-Knopfs den Audio-Kontext freischalten
-  document.addEventListener('pointerdown', e => { if (e.target.closest('[data-shold]')) tuckCtx(); }, true);
+  document.addEventListener('pointerdown', e => { if (e.target.closest('[data-shold],[data-sil=end]')) tuckCtx(); }, true);
   function startSession() {
     const r = sil(); if (r.silence) return openOv();
     r.silence = { start: Date.now(), tEnd: 0 }; save(); buzz([20, 40, 30]);
@@ -4316,11 +4461,28 @@ render(); setInterval(() => { if (!holding && !$('#sheet').open) render(true); }
     openOv(); render(true);
     toast('Gute Nacht, Handy 🌙');
   }
+  /* Handy wacht auf: Decke rutscht weg, Bildschirm geht an, kleiner Hüpfer + heller Weck-Klang */
+  function wakeSound() {
+    const ac = tuckCtx(); if (!ac) return; const t0 = ac.currentTime + .03, out = ac.createGain(); out.gain.value = .5; out.connect(ac.destination);
+    [739.99, 880, 1108.7, 1479.98].forEach((f, k) => { const st = t0 + k * .11, o = ac.createOscillator(), g = ac.createGain(); o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(0, st); g.gain.linearRampToValueAtTime(.12, st + .01); g.gain.exponentialRampToValueAtTime(.0008, st + 1.4); o.connect(g); g.connect(out); o.start(st); o.stop(st + 1.5); });
+    const o = ac.createOscillator(), g = ac.createGain(), lp = ac.createBiquadFilter(); o.type = 'triangle'; o.frequency.value = 293.66; lp.type = 'lowpass'; lp.frequency.setValueAtTime(300, t0); lp.frequency.exponentialRampToValueAtTime(2200, t0 + .8);
+    g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(.08, t0 + .3); g.gain.exponentialRampToValueAtTime(.0008, t0 + 1.8); o.connect(lp); lp.connect(g); g.connect(out); o.start(t0); o.stop(t0 + 1.9);
+    setTimeout(() => { try { out.disconnect(); } catch (e) { } }, 2500);
+  }
+  function wakeAnim(done) {
+    if (!ov || ov.hidden || matchMedia('(prefers-reduced-motion: reduce)').matches) return done();
+    const art = ov.querySelector('.sil-mid .sil-art'), h = $('#silHint'), lbl = ov.querySelector('.sil-lbl');
+    ov.classList.add('waking'); if (art) { art.classList.remove('slept'); art.classList.add('waking'); }
+    if (lbl) lbl.textContent = 'Handy ist wach'; if (h) h.textContent = 'Guten Morgen, Handy ☀️ Und du – schön, dass du da warst.';
+    wakeSound(); try { buzz([8, 40, 14]); } catch (e) { }
+    setTimeout(() => { ov.classList.remove('waking'); if (art) art.classList.remove('waking'); done(); }, 1900);
+  }
   function endSession() {
     const r = sil(), s = r.silence; if (!s) return;
     const min = Math.round((Date.now() - s.start) / 60000);
     r.silences.push({ t: s.start, min }); r.silences = r.silences.slice(-400); r.silence = null; save();
-    clearInterval(tickIv); fadeOut(3); setTimeout(() => playSound('off'), 2500); closeOv();
+    clearInterval(tickIv); fadeOut(3); setTimeout(() => playSound('off'), 2500); wakeAnim(closeOv);
     if (min >= MIN_PLANT) { justGrew = eveKey(s.start); toast(`${dur(min)} handyfrei · +2 ⭐`); buzz([12, 50, 24]); }
     else toast(`Schon vorbei? Ab ${MIN_PLANT} Min. handyfrei gibt's Sterne ⭐`);
     if (tab === 'ruhe') { render(); setTimeout(() => { const p = $('.sg-plant.new'); if (p && window.Micro) { const b = p.getBoundingClientRect(); Micro.sparks(b.left + b.width / 2, b.top + b.height / 3, 12, { cls: 'gold' }); } }, 650); }
@@ -4641,6 +4803,180 @@ render(); setInterval(() => { if (!holding && !$('#sheet').open) render(true); }
       <p class="muted small">Basiert auf CBT-I (Verhaltenstherapie bei Schlafstörungen). Kein Ersatz für ärztlichen Rat.</p>`;
   }
 
+  /* ---------- Graphen (Inline-SVG, eine Achse je Graph, Tooltip per Tippen/Halten) ---------- */
+  let VG = 'dur';
+  const GTABS = [['dur', 'Dauer'], ['zeit', 'Zeiten'], ['handy', 'Handy'], ['score', 'Score']];
+  const MW = ['', 'mies', 'naja', 'okay', 'gut', 'super'];
+  const NS = 'http://www.w3.org/2000/svg';
+  const f1 = v => (+v).toFixed(1);
+  const dLab = d => { const t = new Date(d + 'T12:00'); return `${d === todayKey() ? 'Heute' : WD[t.getDay()]} ${t.getDate()}.${t.getMonth() + 1}.`; };
+  const hm = m => { m = ((Math.round(m) % 1440) + 1440) % 1440; return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); };
+  const sgn = m => (m > 0 ? '+' : m < 0 ? '−' : '±') + dur(Math.abs(m));
+  const barP = (x, y0, y1, w) => { const h = y0 - y1; if (h < .5) return ''; const r = Math.min(4, w / 2, h), l = x - w / 2, rr = x + w / 2; return `M${f1(l)} ${f1(y0)}V${f1(y1 + r)}Q${f1(l)} ${f1(y1)} ${f1(l + r)} ${f1(y1)}H${f1(rr - r)}Q${f1(rr)} ${f1(y1)} ${f1(rr)} ${f1(y1 + r)}V${f1(y0)}Z`; };
+  const lineP = pts => { let d = '', on = false; pts.forEach(p => { if (!p) { on = false; return; } d += (on ? 'L' : 'M') + f1(p[0]) + ' ' + f1(p[1]); on = true; }); return d; };
+  let GD = null; // Daten des sichtbaren Graphen für den Tooltip
+
+  /* Rahmen: x-Slots je Tag, y-Skala, Gitter, Achsen */
+  function frame(ds, W, H, top, bot, y, ticks, tlab, unit) {
+    const L = 34, R = 10, n = ds.length, sw = (W - L - R) / n, X = i => L + sw * (i + .5);
+    const grid = ticks.map(v => `<line class="vg-g" x1="${L}" x2="${W - R}" y1="${f1(y(v))}" y2="${f1(y(v))}"/><text class="vg-yt" x="${L - 6}" y="${f1(y(v) + 3.5)}">${tlab(v)}</text>`).join('');
+    const xl = ds.map((d, i) => {
+      const t = new Date(d + 'T12:00'), show = n <= 7 || (n - 1 - i) % 7 === 0; if (!show) return '';
+      const s = n <= 7 ? (d === todayKey() ? 'Heute' : WD[t.getDay()]) : `${t.getDate()}.${t.getMonth() + 1}.`;
+      const anc = n > 7 && i === n - 1 ? 'end' : 'middle', x = anc === 'end' ? X(i) + sw / 2 : X(i);
+      return `<text class="vg-xt${d === todayKey() ? ' now' : ''}" x="${f1(x)}" y="${H - 6}" text-anchor="${anc}">${s}</text>`;
+    }).join('');
+    return { L, R, sw, X, n, W0: W, chrome: `${grid}${unit ? `<text class="vg-yt u" x="${L - 6}" y="${top - 13}">${unit}</text>` : ''}${xl}`, base: H - bot };
+  }
+  const svgOpen = (W, H, lab) => `<svg class="vg-svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" tabindex="0" aria-label="${lab}">`;
+  const hit = (fr, top, H) => `<line class="vg-x" x1="0" x2="0" y1="${top - 4}" y2="${fr.base}" hidden/><rect class="vg-hit" x="${fr.L}" y="0" width="${W_(fr)}" height="${H}"/>`;
+  const W_ = fr => fr.sw * fr.n;
+  const key = (cls, t, kind = 'sw') => `<span class="vg-k"><i class="${kind.split(' ').map(k => 'vk-' + k).join(' ')} ${cls}"></i>${t}</span>`;
+  const table = (heads, rows) => `<details class="vg-tab"><summary>Werte als Tabelle</summary><div class="vg-tw"><table><thead><tr><th>Tag</th>${heads.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr><td>${r[0]}</td>${r.slice(1).map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div></details>`;
+
+  function gDur(ds, by, W) {
+    const need = S.settings.need * 60, vals = ds.map(d => by[d] ? calc(by[d]).tst : null), have = vals.filter(v => v != null);
+    const H = 204, top = 30, bot = 22, hiH = Math.max(Math.ceil(need / 60) + 1, Math.ceil(Math.max(...have) / 60)), lo = 0;
+    const y = v => top + (1 - (v / 60 - lo) / (hiH - lo)) * (H - top - bot);
+    const ticks = []; for (let h = 0; h <= hiH; h += hiH > 10 ? 4 : 2) ticks.push(h * 60);
+    const fr = frame(ds, W, H, top, bot, y, ticks, v => v / 60, 'Std.');
+    const bw = Math.min(22, fr.sw * .62), mean = avg(have), ok = v => v >= need - 30;
+    const bars = vals.map((v, i) => v == null ? '' : `<path class="vg-bar ${ok(v) ? 'c-ok' : 'c-lo'}" style="--i:${i}" d="${barP(fr.X(i), fr.base, y(v), bw)}"/>`).join('');
+    const yz = y(need), ya = y(mean), near = Math.abs(yz - ya) < 13;
+    const refs = `<line class="vg-ref goal" x1="${fr.L}" x2="${W - fr.R}" y1="${f1(yz)}" y2="${f1(yz)}"/><line class="vg-ref avg" x1="${fr.L}" x2="${W - fr.R}" y1="${f1(ya)}" y2="${f1(ya)}"/>
+      <text class="vg-rl" x="${W - fr.R}" y="${f1(yz - 5)}" text-anchor="end">Ziel ${dur(need)}</text><text class="vg-rl" x="${fr.L + 4}" y="${f1(near && ya > yz ? ya + 13 : ya - 5)}">Ø ${dur(mean)}</text>`;
+    const inG = have.filter(ok).length, diff = mean - need;
+    const sub = `Ø <b>${dur(mean)}</b> pro Nacht – ${Math.abs(diff) < 10 ? 'genau dein Ziel' : diff < 0 ? `${dur(-diff)} unter deinem Ziel` : `${dur(diff)} über deinem Ziel`}. ${inG} von ${have.length} Nächten im Ziel.`;
+    GD = { fr, rows: ds.map((d, i) => vals[i] == null ? null : [[dur(vals[i]), 'Schlaf', ok(vals[i]) ? 'c-ok' : 'c-lo'], [sgn(vals[i] - need), 'zum Ziel']]) };
+    return { sub, leg: key('c-ok', 'im Ziel') + key('c-lo', 'zu kurz (> 30 Min drunter)') + key('goal', 'Ziel', 'ln') + key('avg', 'Ø', 'ln'),
+      svg: `${svgOpen(W, H, `Schlafdauer pro Nacht, ${sub.replace(/<[^>]+>/g, '')}`)}${fr.chrome}${bars}${refs}${hit(fr, top, H)}</svg>`,
+      tab: table(['Schlaf', 'zum Ziel'], ds.filter(d => by[d]).map(d => [dLab(d), dur(calc(by[d]).tst), sgn(calc(by[d]).tst - need)])) };
+  }
+
+  function gZeit(ds, by, W) {
+    const p = plan(), m20 = t => (toMin(t) + 1440 - 1200) % 1440, cl = v => Math.max(0, Math.min(960, v));
+    const H = 236, top = 30, bot = 22, y = v => top + cl(v) / 960 * (H - top - bot);
+    const fr = frame(ds, W, H, top, bot, y, [0, 120, 240, 360, 480, 600, 720, 840, 960], v => (20 + v / 60) % 24, 'Uhr');
+    const B = ds.map((d, i) => by[d] ? [fr.X(i), y(m20(by[d].bed))] : null), O = ds.map((d, i) => by[d] ? [fr.X(i), y(m20(by[d].out))] : null);
+    // weiche Fläche = Zeit im Bett, nur zwischen aufeinanderfolgenden Tagen
+    let band = ''; for (let i = 0; i < ds.length; i++) { if (!B[i]) continue; let j = i; while (j + 1 < ds.length && B[j + 1]) j++;
+      band += j > i ? `<path class="vg-span" d="${lineP(B.slice(i, j + 1))}L${O.slice(i, j + 1).reverse().map(q => f1(q[0]) + ' ' + f1(q[1])).join('L')}Z"/>` : `<line class="vg-span1" x1="${f1(B[i][0])}" x2="${f1(B[i][0])}" y1="${f1(B[i][1])}" y2="${f1(O[i][1])}"/>`; i = j; }
+    const r = ds.length > 7 ? 3 : 4;
+    const dots = (P, c) => P.map((q, i) => q ? `<circle class="vg-dot ${c}" style="--i:${i}" cx="${f1(q[0])}" cy="${f1(q[1])}" r="${r}"/>` : '').join('');
+    const yb = y(m20(p.bed)), yw = y(m20(p.wake));
+    const refs = `<line class="vg-ref s-bed" x1="${fr.L}" x2="${W - fr.R}" y1="${f1(yb)}" y2="${f1(yb)}"/><line class="vg-ref s-out" x1="${fr.L}" x2="${W - fr.R}" y1="${f1(yw)}" y2="${f1(yw)}"/>
+      <text class="vg-rl" x="${W - fr.R}" y="${f1(yb - 5)}" text-anchor="end">Ziel ${p.bed}</text><text class="vg-rl" x="${W - fr.R}" y="${f1(yw + 13)}" text-anchor="end">Ziel ${p.wake}</text>`;
+    const have = ds.filter(d => by[d]), sdB = sd(have.map(d => m20(by[d].bed))), sdO = sd(have.map(d => m20(by[d].out))), s = Math.round((sdB + sdO) / 2);
+    const sub = have.length < 2 ? 'Ab 2 Nächten siehst du, wie gleichmäßig deine Zeiten sind.' : `Bettzeit schwankt um <b>±${Math.round(sdB)} Min</b>, Aufstehen um <b>±${Math.round(sdO)} Min</b>. ${s < 30 ? 'Schön flache Linien.' : s < 60 ? 'Je flacher die Linien, desto leichter der Morgen.' : 'Flachere Linien = leichteres Aufstehen.'}`;
+    GD = { fr, rows: ds.map(d => { const n = by[d]; if (!n) return null; const dv = ((m20(n.out) - m20(p.wake)));
+      return [[n.bed, 'ins Bett', 's-bed'], [n.out, 'aufgestanden', 's-out'], [sgn(dv), 'Aufstehen vs. Ziel']]; }) };
+    return { sub, leg: key('s-bed', 'ins Bett', 'dot') + key('s-out', 'aufgestanden', 'dot') + key('s-bed', 'Zielzeiten', 'ln dash'),
+      svg: `${svgOpen(W, H, `Bett- und Aufstehzeit. ${sub.replace(/<[^>]+>/g, '')}`)}${fr.chrome}${band}${refs}<path class="vg-line s-bed" pathLength="1" d="${lineP(B)}"/><path class="vg-line s-out" pathLength="1" d="${lineP(O)}"/>${dots(B, 's-bed')}${dots(O, 's-out')}${hit(fr, top, H)}</svg>`,
+      tab: table(['Bett', 'Auf'], have.map(d => [dLab(d), by[d].bed, by[d].out])) };
+  }
+
+  function gHandy(ds, by, W) {
+    const mood = (S.ruhe && S.ruhe.mood) || {}, ph = ds.map(d => by[d] && by[d].phoneMin != null ? by[d].phoneMin : null), md = ds.map(d => mood[d] != null ? Number(mood[d]) : null);
+    const hp = ph.filter(v => v != null), hm_ = md.filter(v => v != null);
+    if (!hp.length && !hm_.length) return { empty: 'Beim Check-in kannst du eintragen, wie lange du abends am Handy warst – und im Tab „Silence“ deine Stimmung. Dann siehst du hier beides nebeneinander.' };
+    // oben: Handy-Minuten
+    const H1 = 158, top = 30, bot = 22, mx = Math.max(60, Math.ceil(Math.max(0, ...hp) / 60) * 60), y = v => top + (1 - v / mx) * (H1 - top - bot);
+    const st = mx > 180 ? 120 : 60, tk = []; for (let v = 0; v <= mx; v += st) tk.push(v);
+    const fr = frame(ds, W, H1, top, bot, y, tk, v => v, 'Min');
+    const bw = Math.min(22, fr.sw * .62), mean = avg(hp);
+    const bars = ph.map((v, i) => v == null ? '' : v === 0 ? `<rect class="vg-zero" x="${f1(fr.X(i) - bw / 2)}" y="${f1(fr.base - 2)}" width="${f1(bw)}" height="2" rx="1"/>` : `<path class="vg-bar c-ph" style="--i:${i}" d="${barP(fr.X(i), fr.base, y(v), bw)}"/>`).join('');
+    const ref = hp.length ? `<line class="vg-ref avg" x1="${fr.L}" x2="${W - fr.R}" y1="${f1(y(mean))}" y2="${f1(y(mean))}"/><text class="vg-rl" x="${W - fr.R}" y="${f1(y(mean) - 5)}" text-anchor="end">Ø ${mean ? dur(mean) : '0 Min'}</text>` : '';
+    // unten: Stimmung 1–5, eigener Mini-Graph (keine zweite Achse)
+    const H2 = 118, t2 = 14, y2 = v => t2 + (5 - v) / 4 * (H2 - t2 - bot);
+    const fr2 = frame(ds, W, H2, t2, bot, y2, [1, 3, 5], v => MW[v], '');
+    const MP = md.map((v, i) => v == null ? null : [fr2.X(i), y2(v)]);
+    const mdots = MP.map((q, i) => q ? `<circle class="vg-dot c-md" style="--i:${i}" cx="${f1(q[0])}" cy="${f1(q[1])}" r="${ds.length > 7 ? 3 : 4}"/>` : '').join('');
+    const lo = ds.map((d, i) => ph[i] != null && md[i] != null ? [ph[i], md[i]] : null).filter(Boolean), a = lo.filter(x => x[0] <= 30), b = lo.filter(x => x[0] > 30);
+    const sub = a.length && b.length ? `Nach Abenden mit ≤ 30 Min Handy: Stimmung Ø <b>${fmtN(avg(a.map(x => x[1])))}</b> – sonst Ø <b>${fmtN(avg(b.map(x => x[1])))}</b> (von 5).` : hp.length ? `Ø <b>${dur(mean)}</b> Handy pro Abend.` : 'Noch keine Handy-Minuten eingetragen.';
+    GD = { fr, rows: ds.map((d, i) => ph[i] == null && md[i] == null ? null : [[ph[i] == null ? '–' : ph[i] ? dur(ph[i]) : 'gar nicht', 'Handy abends', 'c-ph'], [md[i] == null ? '–' : `${md[i]} · ${MW[md[i]]}`, 'Stimmung morgens', 'c-md']]) };
+    return { sub, leg: key('c-ph', 'Handy abends (Min)') + key('c-md', 'Stimmung am Morgen', 'dot'),
+      svg: `${svgOpen(W, H1, `Handy abends in Minuten. ${sub.replace(/<[^>]+>/g, '')}`)}${fr.chrome}${bars}${ref}${hit(fr, top, H1)}</svg>
+        <p class="vg-mini">Stimmung am Morgen</p>${svgOpen(W, H2, 'Stimmung am Morgen, 1 mies bis 5 super')}${fr2.chrome}<path class="vg-line c-md" pathLength="1" d="${lineP(MP)}"/>${mdots}${hit(fr2, t2, H2)}</svg>`,
+      tab: table(['Handy', 'Stimmung'], ds.filter((d, i) => ph[i] != null || md[i] != null).map(d => { const i = ds.indexOf(d); return [dLab(d), ph[i] == null ? '–' : dur(ph[i]), md[i] == null ? '–' : md[i] + ' ' + MW[md[i]]]; })) };
+  }
+
+  function gScore(ds, by, W) {
+    const all = sorted(), sc = {}; all.forEach((x, j) => { sc[x.date] = parts(all.slice(Math.max(0, j - 6), j + 1)).total; });
+    const v = ds.map(d => by[d] ? sc[d] : null), have = v.filter(x => x != null);
+    if (have.length < 2) return { empty: 'Ab 2 Nächten zeichnen wir hier deinen Score-Verlauf.' };
+    const H = 180, top = 22, bot = 22, y = s => top + (1 - s / 100) * (H - top - bot);
+    const fr = frame(ds, W, H, top, bot, y, [0, 25, 50, 75, 100], s => s, '');
+    const P = v.map((s, i) => s == null ? null : [fr.X(i), y(s)]);
+    let area = ''; for (let i = 0; i < P.length; i++) { if (!P[i]) continue; let j = i; while (j + 1 < P.length && P[j + 1]) j++;
+      if (j > i) area += `<path class="vg-area" d="${lineP(P.slice(i, j + 1))}L${f1(P[j][0])} ${fr.base}L${f1(P[i][0])} ${fr.base}Z"/>`; i = j; }
+    const li = v.reduce((k, s, i) => s != null ? i : k, -1), last = v[li], first = have[0];
+    const dots = P.map((q, i) => q && (ds.length <= 7 || i === li) ? `<circle class="vg-dot c-sc${i === li ? ' end' : ''}" style="--i:${i}" cx="${f1(q[0])}" cy="${f1(q[1])}" r="${i === li ? 5 : ds.length > 7 ? 2.5 : 3.5}"/>` : '').join('');
+    const lab = `<text class="vg-end" x="${f1(Math.min(W - fr.R, P[li][0]))}" y="${f1(P[li][1] - 10)}" text-anchor="${P[li][0] > W - 30 ? 'end' : 'middle'}">${last}</text>`;
+    const dl = last - first, sub = `Gleitend über die letzten 7 Nächte. ${Math.abs(dl) < 3 ? 'Stabil' : dl > 0 ? `<b>+${dl}</b> Punkte` : `<b>−${-dl}</b> Punkte`} im Zeitraum – ab 75 ist richtig gut.`;
+    GD = { fr, rows: ds.map((d, i) => v[i] == null ? null : [[String(v[i]), 'Score (7 Nächte)', 'c-sc'], [dur(calc(by[d]).tst), 'Schlaf in der Nacht']]) };
+    return { sub, leg: '',
+      svg: `${svgOpen(W, H, `Schlaf-Score-Trend. ${sub.replace(/<[^>]+>/g, '')}`)}${fr.chrome}${area}<path class="vg-line c-sc" pathLength="1" d="${lineP(P)}"/>${dots}${lab}${hit(fr, top, H)}</svg>`,
+      tab: table(['Score'], ds.filter(d => by[d]).map(d => [dLab(d), sc[d]])) };
+  }
+
+  function graphInner(W) {
+    const ds = days(VR === 'w' ? 7 : 30), by = Object.fromEntries(S.nights.map(n => [n.date, n]));
+    GD = null;
+    if (!ds.some(d => by[d]) && VG !== 'handy') return `<div class="vg-empty">${ghost()}<p>In diesem Zeitraum gibt es noch keine Nacht. Trag eine ein – dann wächst hier dein erster Balken.</p></div>`;
+    const g = { dur: gDur, zeit: gZeit, handy: gHandy, score: gScore }[VG](ds, by, W);
+    if (g.empty) return `<div class="vg-empty">${ghost()}<p>${g.empty}</p></div>`;
+    return `<p class="vg-sub">${g.sub}</p>${g.leg ? `<div class="vg-leg" aria-hidden="true">${g.leg}</div>` : ''}<div class="vg-wrap">${g.svg}<div class="vg-tip" role="status" hidden></div></div>
+      <p class="vb-hint">${ic('edit')}Tippen oder halten zeigt die Werte</p>${g.tab}`;
+  }
+  const ghost = () => `<svg class="vg-ghost" viewBox="0 0 200 64" aria-hidden="true">${[30, 44, 24, 52, 38, 46, 34].map((h, i) => `<path style="--i:${i}" d="${barP(22 + i * 26, 60, 60 - h, 14)}"/>`).join('')}</svg>`;
+
+  function graphCard() {
+    return `<div class="card vg"><div class="vb-head"><h2>Graphen</h2></div>
+      <div class="vg-tabs" role="tablist" aria-label="Graph wählen">${GTABS.map(([k, l]) => `<button role="tab" data-vg="${k}" aria-selected="${VG === k}" class="${VG === k ? 'on' : ''}">${l}</button>`).join('')}</div>
+      <div id="vgBox" class="vg-box"></div></div>`;
+  }
+  function mountGraph(anim = true) {
+    const box = document.getElementById('vgBox'); if (!box) return;
+    const W = Math.max(260, Math.round(box.clientWidth || 316));
+    box.classList.toggle('still', !anim); box.innerHTML = graphInner(W); box._w = W;
+  }
+  const later = () => requestAnimationFrame(() => mountGraph(true));
+  addEventListener('resize', () => { const b = document.getElementById('vgBox'); if (b && Math.abs((b.clientWidth || 0) - (b._w || 0)) > 4) mountGraph(false); });
+
+  /* Tooltip: nächster Tag zur Fingerposition, Fadenkreuz, alle Werte des Tages */
+  function showTip(svg, i) {
+    const wrap = svg.closest('.vg-wrap'), tip = wrap && wrap.querySelector('.vg-tip'); if (!GD || !tip) return;
+    const fr = GD.fr; i = Math.max(0, Math.min(fr.n - 1, i)); wrap._i = i;
+    const ds = days(VR === 'w' ? 7 : 30), d = ds[i], rows = GD.rows[i], x = fr.X(i);
+    $$('.vg-svg', wrap).forEach(s => { const c = s.querySelector('.vg-x'); if (c) { c.setAttribute('x1', x); c.setAttribute('x2', x); c.removeAttribute('hidden'); }
+      s.querySelectorAll('.on').forEach(e => e.classList.remove('on')); s.querySelectorAll(`[style="--i:${i}"]`).forEach(e => e.classList.add('on')); });
+    tip.textContent = '';
+    const h = document.createElement('b'); h.className = 'vg-td'; h.textContent = dLab(d); tip.append(h);
+    if (!rows) { const p = document.createElement('span'); p.className = 'vg-tr none'; p.textContent = 'Keine Daten'; tip.append(p); }
+    else rows.forEach(([v, l, c]) => { const r = document.createElement('span'); r.className = 'vg-tr';
+      const k = document.createElement('i'); k.className = 'lk ' + (c || 'none'); const s = document.createElement('strong'); s.textContent = v; const m = document.createElement('small'); m.textContent = l; r.append(k, s, m); tip.append(r); });
+    const btn = document.createElement('button'); btn.className = 'vg-edit'; btn.dataset.act = 'edit'; btn.dataset.date = d; btn.textContent = by_(d) ? 'Bearbeiten ›' : 'Nachtragen ›'; tip.append(btn);
+    tip.hidden = false;
+    // über dem Plot schweben (überdeckt Text, nicht die Daten), seitlich am Fadenkreuz
+    const s0 = wrap.querySelector('.vg-svg'), sc = s0.getBoundingClientRect().width / fr.W0, px = x * sc, ww = wrap.clientWidth, tw = tip.offsetWidth;
+    tip.style.left = Math.round(Math.max(0, Math.min(ww - tw, px - tw / 2))) + 'px';
+    tip.style.top = Math.round(s0.getBoundingClientRect().top - wrap.getBoundingClientRect().top + 8 * sc - tip.offsetHeight) + 'px';
+  }
+  const by_ = d => S.nights.some(n => n.date === d);
+  function hideTip(wrap) { if (!wrap) return; const t = wrap.querySelector('.vg-tip'); if (t) t.hidden = true; wrap._i = null;
+    $$('.vg-x', wrap).forEach(c => c.setAttribute('hidden', '')); $$('.vg-svg .on', wrap).forEach(e => e.classList.remove('on')); }
+  function idxAt(svg, cx) { const r = svg.getBoundingClientRect(), fr = GD.fr, vx = (cx - r.left) / r.width * fr.W0; return Math.floor((vx - fr.L) / fr.sw); }
+  document.addEventListener('pointerdown', e => { const s = e.target.closest && e.target.closest('.vg-svg'); if (s && GD) { showTip(s, idxAt(s, e.clientX)); return; }
+    if (!(e.target.closest && e.target.closest('.vg-tip'))) $$('.vg-wrap').forEach(hideTip); });
+  document.addEventListener('pointermove', e => { const s = e.target.closest && e.target.closest('.vg-svg'); if (s && GD && (e.pointerType === 'mouse' || e.buttons)) showTip(s, idxAt(s, e.clientX)); });
+  document.addEventListener('pointerout', e => { const s = e.target.closest && e.target.closest('.vg-svg'); if (s && e.pointerType === 'mouse' && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('.vg-wrap'))) hideTip(s.closest('.vg-wrap')); });
+  document.addEventListener('keydown', e => { const s = e.target.closest && e.target.closest('.vg-svg'); if (!s || !GD) return; const w = s.closest('.vg-wrap');
+    if (e.key === 'Escape') return hideTip(w); const dlt = { ArrowLeft: -1, ArrowRight: 1, Home: -99, End: 99 }[e.key]; if (dlt == null) return; e.preventDefault();
+    showTip(s, w._i == null ? GD.fr.n - 1 : w._i + dlt); });
+  document.addEventListener('focusin', e => { if (e.target.classList && e.target.classList.contains('vg-svg') && GD) { const w = e.target.closest('.vg-wrap'); if (w._i == null) showTip(e.target, GD.fr.n - 1); } });
+  document.addEventListener('click', e => { const b = e.target.closest('[data-vg]'); if (!b || b.dataset.vg === VG) return; VG = b.dataset.vg; try { buzz(8); } catch (x) { }
+    $$('[data-vg]').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-selected', x === b); }); mountGraph(true); });
+
   function coach() {
     const p = plan(), all = coachTips();
     return `<div class="card vc"><div class="vc-plan"><div><span>Dein Fenster</span><b>${p.bed}<em>→</em>${p.wake}</b></div><span class="vc-win">${dur(p.win)}${p.mode === 'fokus' ? ' <span class="tag w">Fokus</span>' : ''}</span></div>
@@ -4649,7 +4985,8 @@ render(); setInterval(() => { if (!holding && !$('#sheet').open) render(true); }
   }
 
   function body() {
-    return `${band(VR)}${scoreCard(VR)}`;
+    later();
+    return `${band(VR)}${graphCard()}${scoreCard(VR)}`;
   }
 
   window.vVerlauf = function () {
@@ -4657,7 +4994,8 @@ render(); setInterval(() => { if (!holding && !$('#sheet').open) render(true); }
     if (!ns.length) return `<div class="greet"><h1>Verlauf</h1><p>Dein Schlaf, als Bild – ganz ohne Rechnen.</p></div>
       <div class="card vb-empty"><div class="vb-ghost" aria-hidden="true">${[[30, 52], [38, 50], [22, 58], [34, 48], [28, 56]].map(([l, w], i) => `<i style="--i:${i};left:${l}%;width:${w}%"></i>`).join('')}</div>
       <h2>Hier entsteht dein Schlaf-Band</h2><p>Jeder Check-in malt einen Streifen von Bett- bis Aufstehzeit. Nach ein paar Tagen siehst du auf einen Blick, wie gleichmäßig dein Rhythmus ist.</p>
-      <button class="btn accent full" data-act="checkin">${I.book}Erste Nacht eintragen · 20 Sek.</button></div>${coach()}`;
+      <button class="btn accent full" data-act="checkin">${I.book}Erste Nacht eintragen · 20 Sek.</button></div>
+      <div class="card vg"><div class="vb-head"><h2>Graphen</h2></div><div class="vg-empty">${ghost()}<p>Schlafdauer, Bett- und Aufstehzeiten, Handy &amp; Stimmung und dein Score – hier als Kurven, sobald die ersten Nächte da sind.</p></div></div>${coach()}`;
     const c = calc(last), dt = new Date(last.date + 'T12:00'), isY = last.date === todayKey();
     const seg = `<div class="seg vr-seg" role="tablist" aria-label="Zeitraum">${[['w', '7 Tage'], ['m', '30 Tage']].map(([k, l]) => `<button role="tab" aria-selected="${VR === k}" class="${VR === k ? 'on' : ''}" data-vr="${k}">${l}</button>`).join('')}</div>`;
     return `<div class="greet vr-greet"><h1>Verlauf</h1><p>${isY || last.date === days(2)[0] ? 'Letzte Nacht' : WD[dt.getDay()] + ' ' + dt.getDate() + '.' + (dt.getMonth() + 1) + '.'}: <b>${dur(c.tst)}</b> · ${last.bed}–${last.out} · Erholung ${QL[last.q] || '–'}</p></div>
@@ -4971,6 +5309,44 @@ render(); setInterval(() => { if (!holding && !$('#sheet').open) render(true); }
   // Beim Speichern eines Check-ins: offenen handyfreien Abend übernehmen
   const _ws = window.wizSave;
   if (typeof _ws === 'function') window.wizSave = function () { _ws.apply(this, arguments); applyPending(); };
+})();
+
+</script>
+<script>
+'use strict';
+/* Offline – Tippen auf den Schlaf-Score: kurze, animierte Statistik (Ring zeichnet sich, Zahlen zählen hoch, Balken füllen sich). */
+(function () {
+  const RM = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function parts(ns) {
+    if (!ns.length) return null; const need = S.settings.need * 60, c = ns.map(calc), avg = a => a.reduce((x, y) => x + y, 0) / a.length;
+    const tst = avg(c.map(x => x.tst)), se = avg(c.map(x => x.se)), sd = a => { const m = avg(a); return Math.sqrt(avg(a.map(v => (v - m) ** 2))); };
+    const sdB = sd(ns.map(n => rel(toMin(n.bed)))), sdW = sd(ns.map(n => rel(toMin(n.out))));
+    const d = Math.min(1, tst / need) * 40, e = Math.min(1, Math.max(0, (se - .6) / .3)) * 30, r = Math.max(0, 1 - ((sdB + sdW) / 2) / 90) * 30;
+    return { tst, se, swing: (sdB + sdW) / 2, d, e, r, score: Math.round(d + e + r) };
+  }
+  function open() {
+    const all = sorted(), now = parts(all.slice(-7)), prev = parts(all.slice(-14, -7));
+    if (!now) { openSheet(`<div class="ss"><h2>Noch kein Schlaf-Score</h2><p class="muted">Trag morgen früh deine erste Nacht ein – dann rechnet Offline los.</p><button class="btn full" data-act="close">Okay</button></div>`); return; }
+    const bro = (S.settings.tone || 'bro') === 'bro', diff = prev ? now.score - prev.score : null;
+    const rows = [['Dauer', now.d, 40, dur(now.tst) + ' Ø'], ['Effizienz', now.e, 30, Math.round(now.se * 100) + ' %'], ['Regelmäßigkeit', now.r, 30, '±' + Math.round(now.swing) + ' min']];
+    const weak = rows.map(([l, v, m]) => ({ l, gap: m - v })).sort((a, b) => b.gap - a.gap)[0];
+    const tip = { Dauer: bro ? 'Mehr Schlaf. Revolutionär, ich weiß.' : 'Früher ins Bett – dein Fenster beginnt mit der Routine.', Effizienz: bro ? 'Weniger wach im Bett liegen. Also: Handy weg.' : 'Erst müde ins Bett, nach 20 min wach: kurz aufstehen.', Regelmäßigkeit: bro ? 'Jeden Tag gleich aufstehen. Ja, auch Samstag.' : 'Feste Aufstehzeit – auch am Wochenende.' }[weak.l];
+    const C = 2 * Math.PI * 54, pct = now.score / 100;
+    openSheet(`<div class="ss">
+      <div class="ss-ring"><svg viewBox="0 0 140 140"><defs><linearGradient id="ssg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#8CA8F0"/><stop offset="1" stop-color="#B79CFF"/></linearGradient></defs>
+        <circle cx="70" cy="70" r="54" class="bg"/><circle cx="70" cy="70" r="54" class="fg" style="--c:${C};--o:${C * (1 - pct)}"/></svg>
+        <div><b data-ss="${now.score}">0</b><small>Schlaf-Score</small></div></div>
+      ${diff != null ? `<p class="ss-trend ${diff >= 0 ? 'up' : 'down'}">${diff >= 0 ? '▲' : '▼'} ${Math.abs(diff)} zur Vorwoche${bro ? (diff > 0 ? ' · Läuft.' : diff < 0 ? ' · Autsch.' : '') : ''}</p>` : '<p class="ss-trend">Letzte 7 Nächte</p>'}
+      <div class="ss-bars">${rows.map(([l, v, m, sub], i) => `<div class="ss-row" style="--d:${.25 + i * .12}s"><span>${l}<small>${sub}</small></span><i><u style="--w:${(v / m) * 100}%"></u></i><b data-ss="${Math.round(v)}">0</b><em>/${m}</em></div>`).join('')}</div>
+      <div class="ss-tip" style="--d:.7s"><strong>Größter Hebel: ${weak.l}</strong><span>${tip} <b>+${Math.round(weak.gap)}</b> drin.</span></div>
+      <button class="btn full" data-act="close" style="margin-top:14px">Alles klar</button></div>`);
+    // Hochzählen
+    const t0 = performance.now(), els = [...document.querySelectorAll('[data-ss]')], dur0 = RM() ? 1 : 900;
+    (function step(t) { const k = Math.min(1, (t - t0) / dur0), e = 1 - Math.pow(1 - k, 3); els.forEach(el => el.textContent = Math.round(Number(el.dataset.ss) * e)); if (k < 1) requestAnimationFrame(step); })(t0);
+    try { buzz([8, 30, 8]); } catch (e) { }
+  }
+  addEventListener('sa-score', open);
+  window.openScoreStats = open;
 })();
 
 </script>
