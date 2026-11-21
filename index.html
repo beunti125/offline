@@ -1954,11 +1954,11 @@ const OB_TYPES = [
 let ob = null; // laufender Assistent
 
 /* Einrichtung als Reise durch eine Nacht: jede Antwort bringt den Morgen näher – „Dein Plan“ ist der Sonnenaufgang. */
-const OB_IC = { latency: 'hourglass', wakeups: 'halfmoon', early: 'sunrise', morning: 'battery', chaos: 'zigzag', coffee: 'cup', phone: 'phone', gaming: 'gamepad', sport: 'dumbbell', naps: 'zzz', shift: 'shuffle', lark: 'sunup', mid: 'smile', owl: 'owl', photo: 'shower', math: 'calc' };
-const OB_SKY = [22.6, 23.6, .6, 2.2, 3.6, 4.7, 5.5, 6.7];          // Himmelsstunde je Schritt
-const OB_DIM = [1, .92, .82, .68, .54, .4, .24, 0];              // Abdunklung der Landschaft
-const OB_LBL = ['Hallo', 'Deine Nächte', 'Uni', 'Dein Anker', 'Dein Typ', 'Gewohnheiten', 'Wecker', 'Dein Plan'];
-const OB_STAR = [[10, 62], [23, 40], [37, 52], [50, 26], [63, 44], [77, 30], [90, 48]]; // Sternbild-Punkte (% der Breite/Höhe)
+const OB_IC = { latency: 'hourglass', wakeups: 'halfmoon', early: 'sunrise', morning: 'battery', chaos: 'zigzag', coffee: 'cup', phone: 'phone', gaming: 'gamepad', sport: 'dumbbell', naps: 'zzz', shift: 'shuffle', lark: 'sunup', mid: 'smile', owl: 'owl', photo: 'shower', math: 'calc', uni: 'cap', work: 'bag', free: 'sunup' };
+const OB_SKY = [22.6, 23.4, 0, 1, 2.2, 3.6, 4.7, 5.5, 6.7];          // Himmelsstunde je Schritt
+const OB_DIM = [1, .94, .86, .78, .66, .54, .4, .24, 0];              // Abdunklung der Landschaft
+const OB_LBL = ['Hallo', 'Deine Nächte', 'Dein Alltag', 'Deine Zeiten', 'Dein Anker', 'Dein Typ', 'Gewohnheiten', 'Wecker', 'Dein Plan'];
+const OB_STAR = [[8, 62], [20, 40], [32, 54], [44, 28], [56, 46], [68, 26], [80, 42], [92, 30]]; // Sternbild-Punkte (% der Breite/Höhe)
 const obIc = (n, fb = '') => window.ICON && n ? ICON(n) : fb;
 const OB_CK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 12.5l4.2 4.2 8.8-9.4"/></svg>';
 const obRM = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1968,14 +1968,14 @@ function startOnboarding() {
   const p = S.profile || {};
   if (ob?.scene) ob.scene.unmount();
   window.Orb?.unmount?.(); // Landschaft von „Heute“ sauber abbauen, bevor die Einrichtung ihre eigene zeigt
-  ob = { step: 0, edit: !!S.profile, d: { name: p.name || '', problems: [...(p.problems || [])], habits: [...(p.habits || [])], type: p.type || 'mid', wake: S.settings.wake, uni: structuredClone(S.uni || UNI_DEF), task: S.settings.task === 'photo' ? 'photo' : 'math' } };
+  ob = { step: 0, edit: !!S.profile, d: { name: p.name || '', problems: [...(p.problems || [])], habits: [...(p.habits || [])], type: p.type || 'mid', life: p.life || (S.uni && uniHas(S.uni) ? 'uni' : null), wake: S.settings.wake, uni: structuredClone(S.uni || UNI_DEF), task: S.settings.task === 'photo' ? 'photo' : 'math' } };
   document.documentElement.classList.add('ob-mode'); $('#app').classList.remove('has-scene'); $('#app').innerHTML = ''; renderOb();
 }
-const OB_STEPS = ['name', 'problems', 'uni', 'wake', 'type', 'habits', 'task', 'done'];
+const OB_STEPS = ['name', 'problems', 'life', 'uni', 'wake', 'type', 'habits', 'task', 'done'];
 function obSkyVars(i) {
   if (!window.Orb?.sky) return '';
   const k = Orb.sky(OB_SKY[i]), m = (a, b, t) => a.map((x, j) => Math.round(x + (b[j] - x) * t)), c = a => `rgb(${a.join(',')})`;
-  return `--ob-top:${c(k.top)};--ob-hor:${c(k.hor)};--ob-deep:${c(m(k.top, [6, 9, 24], .62))};--ob-glow:${c(m(k.hor, [255, 214, 160], i === 7 ? .5 : .15))}`;
+  return `--ob-top:${c(k.top)};--ob-hor:${c(k.hor)};--ob-deep:${c(m(k.top, [6, 9, 24], .62))};--ob-glow:${c(m(k.hor, [255, 214, 160], i === OB_STEPS.length - 1 ? .5 : .15))}`;
 }
 function obPath(i) {
   const pts = OB_STAR, done = i >= OB_STEPS.length - 1;
@@ -1985,7 +1985,7 @@ function obPath(i) {
 }
 function obSceneData(i) {
   const d = ob.d, answered = (d.name ? 1 : 0) + Math.min(2, d.problems.length) + Math.min(2, d.habits.length) + i * 6;
-  return { score: Math.min(98, 30 + answered * 1.6 + (i === 7 ? 30 : 0)), dim: OB_DIM[i], hz: .7, scoreY: 0, label: 'Einrichtung', night: i < 6 };
+  return { score: Math.min(98, 30 + answered * 1.6 + (i === OB_STEPS.length - 1 ? 30 : 0)), dim: OB_DIM[i], hz: .7, scoreY: 0, label: 'Einrichtung', night: i < OB_STEPS.length - 2 };
 }
 function renderOb(dir = 1) {
   const i = ob.step, st = OB_STEPS[i], d = ob.d, nm = d.name ? ', ' + esc(d.name) : '', last = OB_STEPS.length - 1;
@@ -1997,10 +1997,11 @@ function renderOb(dir = 1) {
     <label class="ob-field"><span>Wie soll ich dich nennen?</span><input class="ob-in" id="obName" maxlength="24" autocomplete="given-name" placeholder="Dein Vorname" value="${esc(d.name)}"></label>
     <p class="ob-hi" id="obHi" aria-live="polite">${d.name ? `Schön, dich kennenzulernen, ${esc(d.name)}.` : 'Alles bleibt auf deinem Handy.'}</p>`;
   if (st === 'problems') body = `${head(`Was raubt dir den Schlaf${nm}?`, 'Tipp alles an, was passt. Mehrfachauswahl.')}${tiles(OB_PROBLEMS, 'problems', true, 'grid')}`;
-  if (st === 'uni') { const r = uniRange(d.uni), n = Object.keys(d.uni.dates || {}).length;
-    body = `${head('Dein Uni-Rhythmus', 'Der Wecker richtet sich nach deiner <b>ersten</b> Veranstaltung am Tag.')}${r ? `<div class="ob-import"><span class="ob-import-ic">${obIc('cap', '🎓')}</span><div><b>Stundenplan ist schon drin</b><small>${n} Termine bis ${r[1].split('-').reverse().join('.')} · inkl. Ausnahmen und Weihnachtspause</small></div><i class="ob-import-ok">${OB_CK}</i></div><p class="ob-note">Prüf nur kurz Weg und Fertigmachen.</p>` : ''}<div class="ob-panel">${uniEditor(d.uni)}</div>`; }
+  if (st === 'life') body = `${head(`Was bestimmt deinen Morgen${nm}?`, 'Danach richtet sich dein Wecker – jeden Tag passend.')}${tiles(OB_LIFE, 'life', false, 'big')}`;
+  if (st === 'uni') { const r = d.life === 'uni' && uniRange(d.uni), n = Object.keys(d.uni.dates || {}).length, L = LW(d.life);
+    body = `${head(L.head, L.lead)}${r ? `<div class="ob-import"><span class="ob-import-ic">${obIc('cap', '🎓')}</span><div><b>Stundenplan ist schon drin</b><small>${n} Termine bis ${r[1].split('-').reverse().join('.')} · inkl. Ausnahmen und Weihnachtspause</small></div><i class="ob-import-ok">${OB_CK}</i></div><p class="ob-note">Prüf nur kurz Weg und Fertigmachen.</p>` : ''}<div class="ob-panel">${uniEditor(d.uni)}</div>`; }
   if (st === 'wake') { const u = uniHas(d.uni);
-    body = `${head(`Dein Anker${nm}`, u ? `Dein frühester Uni-Tag braucht <b>${uniEarliest(d.uni)}</b>. An späteren Tagen darfst du max. 1 h länger schlafen – mehr bringt die innere Uhr durcheinander.` : 'Jeden Tag die gleiche Aufstehzeit, auch am Wochenende. Das ist der stärkste Hebel gegen Chaos-Nächte.')}
+    body = `${head(`Dein Anker${nm}`, u ? `Dein frühester ${LW(d.life).day} braucht <b>${uniEarliest(d.uni)}</b>. An späteren Tagen darfst du max. 1 h länger schlafen – mehr bringt die innere Uhr durcheinander.` : 'Jeden Tag die gleiche Aufstehzeit, auch am Wochenende. Das ist der stärkste Hebel gegen Chaos-Nächte.')}
     <div class="ob-anchor"><span class="ob-anchor-ic">${obIc('anchor', '⚓')}</span><div class="ob-time"><button type="button" class="step" data-obw="-15" aria-label="15 Minuten früher">−15</button><input type="time" id="obWake" value="${d.wake}" aria-label="Aufstehzeit"><button type="button" class="step" data-obw="15" aria-label="15 Minuten später">+15</button></div><small>aufstehen · jeden Tag</small></div>`; }
   if (st === 'type') body = `${head('Eule oder Lerche?', 'Damit plane ich deine Abende passend.')}${tiles(OB_TYPES, 'type', false, 'big')}`;
   if (st === 'habits') body = `${head('Was trifft auf dich zu?', 'Ehrlich sein lohnt sich – niemand außer dir sieht das.')}${tiles(OB_HABITS, 'habits', true, 'grid')}`;
@@ -2051,12 +2052,20 @@ function obNav(n) {
   const wi = $('#obWake'); if (wi && wi.value) ob.d.wake = wi.value;
   if (n > 0 && ob.step === OB_STEPS.length - 1) return finishOnboarding();
   if (n > 0 && OB_STEPS[ob.step] === 'uni') { readUni(ob.d.uni); if (uniHas(ob.d.uni)) ob.d.wake = uniEarliest(ob.d.uni); }
-  const to = Math.max(0, Math.min(OB_STEPS.length - 1, ob.step + n)); if (to === ob.step) return;
+  if (OB_STEPS[ob.step] === 'life' && n > 0 && !ob.d.life) { toast('Tipp kurz an, was passt'); return; }
+  if (OB_STEPS[ob.step] === 'life' && n > 0 && ob.d.life === 'work' && ob.d.uni.dates) ob.d.uni = Object.assign(structuredClone(UNI_DEF), { commute: ob.d.uni.commute, routine: ob.d.uni.routine });
+  if (OB_STEPS[ob.step] === 'life' && n > 0 && ob.d.life === 'work' && !Object.values(ob.d.uni.days).some(Boolean)) [1, 2, 3, 4, 5].forEach(k => ob.d.uni.days[k] = '08:00');
+  let to = Math.max(0, Math.min(OB_STEPS.length - 1, ob.step + n)); if (to === ob.step) return;
+  // Schicht / flexibel: kein Wochenplan – Schritt überspringen
+  if (OB_STEPS[to] === 'uni' && (ob.d.life === 'shift' || ob.d.life === 'free')) to += n > 0 ? 1 : -1;
   ob.step = to; buzz?.(6); renderOb(n);
 }
 function finishOnboarding() {
   const d = ob.d;
-  S.profile = { name: d.name, problems: d.problems, habits: d.habits, type: d.type, since: todayKey() };
+  S.profile = { name: d.name, problems: d.problems, habits: d.habits, type: d.type, life: d.life || 'free', since: todayKey() };
+  if (d.life === 'shift' || d.life === 'free') d.uni = structuredClone(UNI_DEF);
+  if (d.life === 'shift') S.settings.noRestrict = true;
+  if (d.life === 'work' && d.uni) { delete d.uni.dates; delete d.uni.source; }
   S.settings.wake = d.wake; S.settings.task = d.task; S.uni = d.uni; S.settings.level = S.settings.level || 'easy';
   if (d.habits.includes('shift')) S.settings.noRestrict = true;
   if (d.problems.includes('doom')) { S.ruhe = S.ruhe || {}; S.ruhe.level = S.ruhe.level === 'soft' || !S.ruhe.level ? 'strict' : S.ruhe.level; }
@@ -2123,6 +2132,14 @@ function insights() {
 }
 
 /* ---------- Uni-Stundenplan: Wecker pro Tag ---------- */
+/* Alltag: Uni/Schule, feste Arbeitszeiten, Schicht oder flexibel – Texte passen sich an */
+const OB_LIFE = [['l_uni', '🎓', 'Uni / Schule', 'Stundenplan, wechselnde Zeiten'], ['l_work', '💼', 'Arbeit', 'feste Arbeitszeiten'], ['l_shift', '🔄', 'Schichtarbeit', 'Früh, Spät, Nacht wechselnd'], ['l_free', '🌤️', 'Flexibel', 'nichts Festes am Morgen']].map(([k, e, l, s]) => [k.slice(2), e, l, s]);
+function LW(life) {
+  life = life || (typeof ob !== 'undefined' && ob ? ob.d.life : S.profile?.life) || 'uni';
+  return life === 'work'
+    ? { w: 'Arbeit', ic: '💼', plan: 'Arbeitszeiten', way: 'Arbeitsweg', start: 'Arbeitsbeginn', head: 'Deine Arbeitszeiten', lead: 'Trag ein, wann du an welchem Tag anfängst. Der Wecker rechnet Weg und Fertigmachen mit ein.', day: 'Arbeitstag' }
+    : { w: 'Uni', ic: '🎓', plan: 'Uni-Stundenplan', way: 'Weg zur Uni', start: 'Uni-Beginn', head: 'Dein Uni-Rhythmus', lead: 'Der Wecker richtet sich nach deiner <b>ersten</b> Veranstaltung am Tag.', day: 'Uni-Tag' };
+}
 const UNI_DEF = { days: { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 0: null }, commute: 30, routine: 30 };
 const WDL = { 1: 'Mo', 2: 'Di', 3: 'Mi', 4: 'Do', 5: 'Fr', 6: 'Sa', 0: 'So' };
 const uniHas = u => !!u && (Object.values(u.days || {}).some(Boolean) || !!uniRange(u));
@@ -2140,7 +2157,7 @@ function uniEvent(u, date) {
 function wakeFor(date = new Date()) {
   const u = S.uni, a = toMin(S.settings.wake); if (!uniHas(u) && !uniRange(u || {})) return { t: S.settings.wake, why: 'Anker' };
   const ev = uniEvent(u, date); let start = ev ? ev.start : ev === null ? null : u.days[date.getDay()];
-  const label = ev ? `${ev.title.split(' ').slice(0, 3).join(' ')} ${ev.start}` : start ? `Uni ${start}` : 'frei';
+  const label = ev ? `${ev.title.split(' ').slice(0, 3).join(' ')} ${ev.start}` : start ? `${LW().w} ${start}` : 'frei';
   if (!start) return { t: fromMin(a + 60), why: (ev === null && isBreak(u, date) ? 'Pause' : 'frei') + ' · Anker + 1 h' };
   const need = toMin(start) - u.commute - u.routine, t = Math.min(Math.max(need, a), a + 60);
   return { t: fromMin(Math.floor(Math.min(t, need) / 5) * 5), why: label, ev };
@@ -2149,8 +2166,8 @@ function isBreak(u, date) { const k = dKey(date), ks = Object.keys(u.dates).sort
 function tomorrow() { const d = new Date(); d.setDate(d.getDate() + (d.getHours() < 4 ? 0 : 1)); return d; }
 function uniEditor(u) {
   return `<div class="uni">${[1, 2, 3, 4, 5, 6, 0].map(k => `<div class="uni-r ${u.days[k] ? 'on' : ''}" data-wd="${k}"><button type="button" class="uni-d" data-unitog="${k}">${WDL[k]}</button>
-    <input type="time" class="uni-t" value="${u.days[k] || '08:15'}" ${u.days[k] ? '' : 'disabled'} aria-label="Uni-Beginn ${WDL[k]}"><span class="uni-free">${u.days[k] ? '' : 'frei'}</span></div>`).join('')}</div>
-    <p class="sub" style="margin:14px 0 6px">Weg zur Uni</p><div class="seg" data-uni="commute">${[15, 30, 45, 60].map(m => `<button type="button" class="${u.commute === m ? 'on' : ''}" data-v="${m}">${m}′</button>`).join('')}</div>
+    <input type="time" class="uni-t" value="${u.days[k] || '08:15'}" ${u.days[k] ? '' : 'disabled'} aria-label="${LW().start} ${WDL[k]}"><span class="uni-free">${u.days[k] ? '' : 'frei'}</span></div>`).join('')}</div>
+    <p class="sub" style="margin:14px 0 6px">${LW().way}</p><div class="seg" data-uni="commute">${[15, 30, 45, 60].map(m => `<button type="button" class="${u.commute === m ? 'on' : ''}" data-v="${m}">${m}′</button>`).join('')}</div>
     <p class="sub" style="margin:14px 0 6px">Fertigmachen inkl. Duschen</p><div class="seg" data-uni="routine">${[20, 30, 45, 60].map(m => `<button type="button" class="${u.routine === m ? 'on' : ''}" data-v="${m}">${m}′</button>`).join('')}</div>`;
 }
 function readUni(u) { $$('.uni-r').forEach(r => { const k = r.dataset.wd; u.days[k] = r.classList.contains('on') ? (r.querySelector('.uni-t').value || '08:15') : null; }); }
@@ -2162,7 +2179,7 @@ document.addEventListener('click', e => {
 }, true);
 function uniSheet() {
   window.__uniEdit = structuredClone(S.uni || UNI_DEF);
-  openSheet(`<h2>Uni-Stundenplan</h2><label class="btn accent full" style="margin-bottom:10px">📄 Stundenplan-Datei importieren<input type="file" id="ttIn" accept=".xls,.xlsx,.htm,.html,.csv,.ics,.txt" hidden></label>
+  openSheet(`<h2>${LW().plan}</h2><label class="btn accent full" style="margin-bottom:10px">📄 ${LW().w === 'Arbeit' ? 'Dienstplan/Kalender (.ics) importieren' : 'Stundenplan-Datei importieren'}<input type="file" id="ttIn" accept=".xls,.xlsx,.htm,.html,.csv,.ics,.txt" hidden></label>
   ${uniRange(window.__uniEdit) ? `<div class="note" style="margin:0 0 14px">✓ ${Object.keys(window.__uniEdit.dates).length} Termine aus „${esc(window.__uniEdit.source || 'Import')}“ bis ${uniRange(window.__uniEdit)[1].split('-').reverse().join('.')}. Ausnahmen und Ferien werden automatisch beachtet. Danach gilt das Wochenmuster unten.</div>` : '<p class="muted small" style="margin:0 0 14px">Excel/HTML-Export aus dem Uni-Portal, CSV oder Kalender (.ics). Oder unten per Hand pro Wochentag:</p>'}${uniEditor(window.__uniEdit)}
   <div class="stack" style="margin-top:16px"><button class="btn full" data-act="uniSave">Speichern</button><button class="btn light full" data-act="close">Abbrechen</button></div>`);
 }
@@ -3252,13 +3269,13 @@ function vWecker() {
     <div class="dsec"><h3>Weckton</h3><div class="snds">${Object.entries(SOUNDS).map(([k, x]) => `<button class="snd ${s.sound === k ? 'on' : ''} ${previewing === k ? 'playing' : ''}" data-snd="${k}" aria-label="${x.n} – Vorschau"><span class="se">${x.e}</span><span class="st"><b>${x.n}</b><small>${x.d}</small></span>${waveSvg(k)}</button>`).join('')}</div></div>
     <div class="dsec"><div class="toggle"><div><strong>Wach-Check</strong><small>Nach ${s.recheckMin} min: „Bist du wach?“</small></div><button class="sw ${s.recheck ? 'on' : ''}" data-set="recheck"></button></div>
     <div class="toggle"><div><strong>Lauter werden</strong><small>Startet leise, wird alle 20 Sek. lauter.</small></div><button class="sw ${s.escalate ? 'on' : ''}" data-set="escalate"></button></div></div>
-    <div class="dsec btn2"><button class="btn light sm" data-act="uni">🎓 Uni-Plan</button><button class="btn accent sm" data-act="testAlarm">${I.bell}Testen</button></div>
+    <div class="dsec btn2"><button class="btn light sm" data-act="uni">${LW().ic} ${LW().plan}</button><button class="btn accent sm" data-act="testAlarm">${I.bell}Testen</button></div>
     <p class="small muted">Prototyp: Im Browser klingelt er nur bei offener App.</p>`;
   return `<div class="greet"><h1>Wecker</h1><p>Geht erst aus, wenn du wirklich wach bist.</p></div>
   <div class="card wakecard wk-night ${wakeEdit ? 'editing' : ''}"><div class="row"><button class="bigtime" data-act="wakeEdit" aria-label="Weckzeit ändern"><span class="muted small">Morgen · ${uni ? esc(w.why) : 'tippen zum Ändern'}</span><div class="big"><span id="wakeT">${w.t}</span>${I.edit}</div></button><button class="sw ${s.alarmOn ? 'on' : ''}" data-set="alarmOn" aria-label="Wecker an/aus"></button></div>
     <div class="wedit"><div><div class="tpick"><button class="step" data-wake="-15" aria-label="15 Minuten früher">−15</button><input type="time" class="bigin" id="wakeIn" value="${s.wake}" aria-label="Anker-Weckzeit"><button class="step" data-wake="15" aria-label="15 Minuten später">+15</button></div>
     <p class="small muted" style="margin:0 0 10px;text-align:center">Anker für jeden Tag · ins Bett ab <b id="wakeBed">${plan().bed}</b></p><button class="btn sm full" data-act="wakeEdit">${I.check}Fertig</button></div></div>
-    ${uni ? uniWeek(true) : '<button class="btn light sm full" data-act="uni" style="margin-top:14px">🎓 Uni-Stundenplan eintragen</button>'}</div>
+    ${uni ? uniWeek(true) : `<button class="btn light sm full" data-act="uni" style="margin-top:14px">${LW().ic} ${LW().plan} eintragen</button>`}</div>
   ${disc('wset', `${I.gear}<span>Weck-Einstellungen<small>${tasks[s.task] || ''} · ${SOUNDS[s.sound]?.n || ''}</small></span>`, set)}`;
 }
 
@@ -4255,6 +4272,7 @@ render(); setInterval(() => { if (!holding && !$('#sheet').open) render(true); }
     gamepad: '<path d="M7.2 8h9.6a4.2 4.2 0 0 1 4.1 4.8l-.5 3.2a2.5 2.5 0 0 1-4.4 1.2L14.6 15H9.4L8 17.2a2.5 2.5 0 0 1-4.4-1.2l-.5-3.2A4.2 4.2 0 0 1 7.2 8zM7.6 10.6v3M6.1 12.1h3M15.6 11.4h.01M17.4 13.1h.01"/>',
     dumbbell: '<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9.2v5.6M20.5 9.2v5.6M6.5 12h11"/>',
     zzz: '<path d="M4 9.5h5l-5 6h5M13.5 4.5h4l-4 5h4M15.5 15.5h4.5l-4.5 5h4.5"/>',
+    bag: '<path d="M3.5 8.5h17v11h-17zM8.5 8.5V6a1.5 1.5 0 0 1 1.5-1.5h4A1.5 1.5 0 0 1 15.5 6v2.5M3.5 13h17"/>',
     shuffle: '<path d="M16.5 3.5h4v4M4 20L20.5 3.5M20.5 16.5v4h-4M15 15l5.5 5.5M4 4l5 5"/>',
     smile: '<circle cx="12" cy="12" r="8.8"/><path d="M8.5 14.2a4 4 0 0 0 7 0M9.2 9.8h.01M14.8 9.8h.01"/>',
     eye: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>',
@@ -5215,7 +5233,7 @@ render(); setInterval(() => { if (!holding && !$('#sheet').open) render(true); }
     const w = nextWake(), r = R2();
     if (!r.setup) return `<div class="card iw"><div class="iw-head"><span class="iw-ic">⏰</span><div><h2>Echten iPhone-Wecker nutzen</h2><p class="sub">Im Browser klingelt der Wecker nur bei offener App. Mit einem Kurzbefehl stellt Offline deinen <b>richtigen iPhone-Wecker</b> – auch im Stummmodus und bei gesperrtem Handy.</p></div></div>
       <button class="btn accent full" data-iw="guide">Einmal einrichten (2 Min)</button></div>`;
-    return `<div class="card iw"><div class="iw-head"><span class="iw-ic">⏰</span><div><h2>iPhone-Wecker für morgen</h2><p class="sub">${w.ev ? `Uni ${w.ev.start} · ` : ''}stellt deinen echten Wecker auf <b>${w.t}</b>${r.last ? ` · zuletzt gestellt: ${esc(r.last)}` : ''}</p></div></div>
+    return `<div class="card iw"><div class="iw-head"><span class="iw-ic">⏰</span><div><h2>iPhone-Wecker für morgen</h2><p class="sub">${w.ev ? `${typeof LW === 'function' ? LW().w : 'Uni'} ${w.ev.start} · ` : ''}stellt deinen echten Wecker auf <b>${w.t}</b>${r.last ? ` · zuletzt gestellt: ${esc(r.last)}` : ''}</p></div></div>
       <a class="btn accent full iw-go" href="${link(w.t)}" data-iw="go" target="_top">Wecker auf ${w.t} stellen</a>
       <button class="btn light sm full" data-iw="guide" style="margin-top:8px">Anleitung nochmal</button></div>`;
   }
