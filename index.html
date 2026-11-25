@@ -25,7 +25,7 @@
 <link rel="apple-touch-startup-image" media="(device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash/splash-1080x2340.jpg">
 <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="splash/splash-640x1136.jpg">
 <script>/* Start ohne hellen Blitz: Hintergrund sofort passend zur Tageszeit */
-(function(){if(!matchMedia('(min-width:700px) and (min-height:640px) and (hover:hover) and (pointer:fine)').matches)document.documentElement.className+=' shell';var h=new Date().getHours(),d=h>=7&&h<17,e=document.documentElement;e.style.background=d?'linear-gradient(#8FAEE6,#C7D5EF) fixed':'linear-gradient(#121A3D,#1E2A58) fixed';if(!d)e.className+=' night';
+(function(){if(!matchMedia('(min-width:700px) and (min-height:640px) and (hover:hover) and (pointer:fine)').matches)document.documentElement.className+=' shell'+((navigator.standalone||matchMedia('(display-mode: standalone)').matches)?' standalone':'');var h=new Date().getHours(),d=h>=7&&h<17,e=document.documentElement;e.style.background=d?'linear-gradient(#8FAEE6,#C7D5EF) fixed':'linear-gradient(#121A3D,#1E2A58) fixed';if(!d)e.className+=' night';
 addEventListener('load',function(){setTimeout(function(){e.style.removeProperty('background')},120)});
 if('serviceWorker' in navigator&&/github\.io$/.test(location.hostname))addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});})();</script>
 <style>
@@ -1943,15 +1943,21 @@ html.shell .sheet .in{overscroll-behavior:contain}
 /* Einrichtung auf kleineren Bildschirmen: Inhalt höher, damit nichts unter dem Knopf liegt */
 @media (max-height:760px){.ob-sheet{margin-top:86px}.ob-stage[data-step=name] .ob-sheet,.ob-stage[data-step=done] .ob-sheet{margin-top:110px}.ob-stage h1{font-size:1.55rem}}
 @media (max-height:600px){.ob-sheet{margin-top:56px}.ob-stage[data-step=name] .ob-sheet,.ob-stage[data-step=done] .ob-sheet{margin-top:70px}}
-/* Unten kein weißer Rand: Tab-Leiste wie bei echten iPhone-Apps bis ganz an den unteren Bildschirmrand */
+/* Unten kein weißer Rand: iOS malt den Bereich am Home-Balken in der GRUNDFARBE der Seite – die bekommt exakt die Farbe der Tab-Leiste */
+html.shell{--tb:color-mix(in srgb,var(--sky-top,#8FAEE6) 58%,var(--card,#fff));background-color:var(--tb)}
+html.shell.night{--tb:var(--card,#172140);background-color:var(--tb)}
+@supports not (background:color-mix(in srgb,red,blue)){html.shell{--tb:#9DB5E6}html.shell.night{--tb:#172140}}
 html.shell #device{top:0;left:0;right:0;bottom:0}
 html.shell #app{top:0;left:0;right:0;bottom:0}
 html.shell .tabbar{left:0;right:0;bottom:0;max-width:none;margin:0;border-radius:26px 26px 0 0;border-width:1px 0 0;padding:7px max(12px,env(safe-area-inset-left)) calc(7px + var(--safe-b));
-  background:color-mix(in srgb,color-mix(in srgb,var(--sky-top,#8FAEE6) 58%,var(--card)) 74%,transparent);border-color:color-mix(in srgb,#fff 35%,transparent);-webkit-backdrop-filter:blur(24px) saturate(1.6);backdrop-filter:blur(24px) saturate(1.6);box-shadow:0 -10px 30px -14px rgba(20,30,70,.3)}
+  background:color-mix(in srgb,var(--tb) 95%,transparent);border-color:color-mix(in srgb,#fff 35%,transparent);-webkit-backdrop-filter:blur(24px) saturate(1.6);backdrop-filter:blur(24px) saturate(1.6);box-shadow:0 -10px 30px -14px rgba(20,30,70,.3)}
+html.shell.night .tabbar{border-color:rgba(255,255,255,.1)}
 html.shell:not(.night) .tabbar button{color:color-mix(in srgb,var(--navy) 88%,transparent)}
 html.shell:not(.night) .tabbar .ind{background:color-mix(in srgb,#fff 42%,transparent)}
-html.shell.night .tabbar{background:color-mix(in srgb,var(--card) 80%,transparent)}
-@supports not (background:color-mix(in srgb,red,blue)){html.shell .tabbar{background:rgba(150,176,230,.82)}html.shell.night .tabbar{background:rgba(23,33,64,.92)}}
+@supports not (background:color-mix(in srgb,red,blue)){html.shell .tabbar{background:var(--tb)}}
+/* Als Home-Bildschirm-App: volle Bildschirmhöhe inkl. Home-Balken-Bereich */
+html.shell.standalone body,html.shell.standalone #device{bottom:auto;height:100vh}
+html.shell.standalone .tabbar{position:absolute}
 html.shell.ob-mode .tabbar{transform:translateY(110%)}
 html.shell .tabbar .ind{top:7px;height:calc(100% - 14px - var(--safe-b))}
 
