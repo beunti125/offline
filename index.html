@@ -1943,6 +1943,12 @@ html.shell .sheet .in{overscroll-behavior:contain}
 /* Einrichtung auf kleineren Bildschirmen: Inhalt höher, damit nichts unter dem Knopf liegt */
 @media (max-height:760px){.ob-sheet{margin-top:86px}.ob-stage[data-step=name] .ob-sheet,.ob-stage[data-step=done] .ob-sheet{margin-top:110px}.ob-stage h1{font-size:1.55rem}}
 @media (max-height:600px){.ob-sheet{margin-top:56px}.ob-stage[data-step=name] .ob-sheet,.ob-stage[data-step=done] .ob-sheet{margin-top:70px}}
+/* Unten kein weißer Rand: Hintergrund läuft in Himmelsfarbe aus, Inhalt blendet sanft unter der Tab-Leiste aus */
+html.shell{background:linear-gradient(180deg,var(--sky-top,#8FAEE6) 0%,var(--bg) 45%,color-mix(in srgb,var(--sky-top,#8FAEE6) 55%,var(--bg)) 100%) fixed}
+html.shell #device::after{content:'';position:fixed;left:0;right:0;bottom:0;height:calc(120px + var(--safe-b));z-index:25;pointer-events:none;
+  background:linear-gradient(180deg,transparent 0%,color-mix(in srgb,var(--sky-top,#8FAEE6) 50%,var(--bg)) 62%,color-mix(in srgb,var(--sky-top,#8FAEE6) 62%,var(--bg)) 100%)}
+html.shell.night #device::after{background:linear-gradient(180deg,transparent 0%,color-mix(in srgb,var(--bg) 85%,#000) 65%)}
+html.shell.ob-mode #device::after{display:none}
 
 </style>
 </head>
