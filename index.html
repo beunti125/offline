@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Offline</title>
 <meta name="description" content="Offline – weniger Handy, besser schlafen, bessere Laune.">
 <meta name="theme-color" content="#121A3D">
@@ -25,7 +25,7 @@
 <link rel="apple-touch-startup-image" media="(device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash/splash-1080x2340.jpg">
 <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="splash/splash-640x1136.jpg">
 <script>/* Start ohne hellen Blitz: Hintergrund sofort passend zur Tageszeit */
-(function(){var h=new Date().getHours(),d=h>=7&&h<17,e=document.documentElement;e.style.background=d?'linear-gradient(#8FAEE6,#C7D5EF) fixed':'linear-gradient(#121A3D,#1E2A58) fixed';if(!d)e.className+=' night';
+(function(){if(!matchMedia('(min-width:700px) and (min-height:640px) and (hover:hover) and (pointer:fine)').matches)document.documentElement.className+=' shell';var h=new Date().getHours(),d=h>=7&&h<17,e=document.documentElement;e.style.background=d?'linear-gradient(#8FAEE6,#C7D5EF) fixed':'linear-gradient(#121A3D,#1E2A58) fixed';if(!d)e.className+=' night';
 addEventListener('load',function(){setTimeout(function(){e.style.removeProperty('background')},120)});
 if('serviceWorker' in navigator&&/github\.io$/.test(location.hostname))addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});})();</script>
 <style>
@@ -1892,7 +1892,7 @@ html.night .sc-dot{box-shadow:0 6px 20px rgba(0,0,0,.35),inset 0 0 0 1px rgba(25
 
 </style>
 <style>
-.demo-pill{all:unset;box-sizing:border-box;cursor:pointer;position:absolute;z-index:60;left:50%;top:calc(var(--safe-t,0px) + 52px);transform:translateX(-50%);display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;font:700 .78rem/1 Manrope,system-ui,sans-serif;color:#fff;background:rgba(20,26,52,.72);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 6px 18px rgba(0,0,0,.25);animation:scPop .5s cubic-bezier(.3,1.5,.5,1) both}
+.demo-pill{all:unset;box-sizing:border-box;cursor:pointer;position:absolute;z-index:5;left:50%;top:calc(var(--safe-t,0px) + 54px);transform:translateX(-50%);display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;font:700 .78rem/1 Manrope,system-ui,sans-serif;color:#fff;background:rgba(20,26,52,.72);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 6px 18px rgba(0,0,0,.25);animation:scPop .5s cubic-bezier(.3,1.5,.5,1) both}
 .demo-pill i{width:7px;height:7px;border-radius:50%;background:#FF6B5E;box-shadow:0 0 0 0 rgba(255,107,94,.6);animation:demoRec 1.6s infinite}
 .demo-pill b{color:#FFD27A}
 .demo-pill:active{transform:translateX(-50%) scale(.95)}
@@ -1922,6 +1922,27 @@ html.night .sc-dot{box-shadow:0 6px 20px rgba(0,0,0,.35),inset 0 0 0 1px rgba(25
 .qc-chips button,.qc-chips span{all:unset;cursor:pointer;padding:8px 12px;border-radius:999px;font-size:.86rem;font-weight:700;color:var(--navy);background:color-mix(in srgb,var(--card) 85%,transparent);border:1px solid color-mix(in srgb,var(--line) 80%,transparent)}
 .qc-chips .on{background:color-mix(in srgb,var(--accent) 20%,var(--card));border-color:var(--accent)}
 .qc-full{all:unset;cursor:pointer;display:block;margin:12px auto 0;font-size:.84rem;font-weight:600;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+
+</style>
+<style>
+/* Offline – App-Gefühl auf dem Handy: Seite steht fest, nur der Inhalt scrollt, kein Gummiband, keine weißen Ränder */
+html.shell{height:100%;overflow:hidden;overscroll-behavior:none}
+html.shell body{height:100%;width:100%;overflow:hidden;overscroll-behavior:none;position:fixed;inset:0;margin:0}
+html.shell{background:linear-gradient(180deg,var(--sky-top,#8FAEE6) 0%,var(--bg) 55%,var(--bg) 100%) fixed}
+html.shell.night{background:linear-gradient(180deg,var(--sky-top,#121A3D) 0%,var(--bg) 60%) fixed}
+html.shell body{background:transparent!important}
+html.shell #device{position:fixed;inset:0;overflow:hidden}
+html.shell #app{position:absolute;inset:0;height:auto;min-height:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;scrollbar-width:none}
+html.shell #app::-webkit-scrollbar{display:none}
+/* Kein Website-Verhalten: kein Text-Markieren, kein Lupen-/Kontextmenü, kein grauer Tipp-Blitz */
+html.shell{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html.shell body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+html.shell input,html.shell textarea,html.shell [contenteditable]{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
+html.shell img,html.shell svg,html.shell canvas{-webkit-user-drag:none}
+html.shell .sheet .in{overscroll-behavior:contain}
+/* Einrichtung auf kleineren Bildschirmen: Inhalt höher, damit nichts unter dem Knopf liegt */
+@media (max-height:760px){.ob-sheet{margin-top:86px}.ob-stage[data-step=name] .ob-sheet,.ob-stage[data-step=done] .ob-sheet{margin-top:110px}.ob-stage h1{font-size:1.55rem}}
+@media (max-height:600px){.ob-sheet{margin-top:56px}.ob-stage[data-step=name] .ob-sheet,.ob-stage[data-step=done] .ob-sheet{margin-top:70px}}
 
 </style>
 </head>
@@ -5539,7 +5560,7 @@ render(); setInterval(() => { if (!holding && !$('#sheet').open) render(true); }
     openSheet(`<div class="mu-sh"><h2>Dein Muster</h2><p class="muted">Aus deinen letzten ${A.n} Nächten – nur deine Daten, kein Durchschnittsmensch.</p>
       <div class="mu-clock"><div class="mu-type"><i>${A.type[1]}</i><b>${A.type[0]}</b></div>
         <dl><div><dt>Schlafmitte${A.free ? ' (Wochenende)' : ''}</dt><dd>${A.ms}</dd></div><div><dt>Natürlich müde</dt><dd>${A.ideal}</dd></div>${A.jet != null ? `<div><dt>Wochenend-Jetlag</dt><dd>${Math.abs(A.jet) < 15 ? 'keiner' : (A.jet > 0 ? '+' : '−') + durS(A.jet)}</dd></div>` : ''}<div><dt>Schlafschuld / Nacht</dt><dd>${A.debt < 10 ? 'keine' : durS(A.debt)}</dd></div></dl></div>
-      ${A.F.length ? `<div class="mu-fs">${A.F.slice(0, 5).map((f, i) => `<div class="mu-f" style="--d:${.1 + i * .07}s"><p><span>${f.ic}</span>${f.t}</p>${bars(f)}</div>`).join('')}</div>` : '<p class="muted">Noch keine klaren Zusammenhänge. Trag weiter ein – und markier Handy/Koffein im Check-in, dann wird es spannend.</p>'}
+      ${A.F.length ? `<div class="mu-fs">${A.F.slice(0, 5).map((f, i) => `<div class="mu-f" style="--d:${.1 + i * .07}s"><p><span>${f.ic}</span><span>${f.t}</span></p>${bars(f)}</div>`).join('')}</div>` : '<p class="muted">Noch keine klaren Zusammenhänge. Trag weiter ein – und markier Handy/Koffein im Check-in, dann wird es spannend.</p>'}
       <p class="mu-foot">Vergleiche deiner eigenen Nächte, keine Diagnose. Je mehr Nächte, desto genauer.</p>
       <button class="btn full" data-act="close">Alles klar</button></div>`);
     try { buzz([8, 30, 8]); } catch (e) { }
@@ -5579,7 +5600,8 @@ render(); setInterval(() => { if (!holding && !$('#sheet').open) render(true); }
   function pill() {
     let p = document.getElementById('demoPill');
     if (!S.demo || (typeof ob !== 'undefined' && ob)) { if (p) p.remove(); return; }
-    if (!p) { p = document.createElement('button'); p.id = 'demoPill'; p.className = 'demo-pill'; p.innerHTML = '<i></i>Demo · <b>Beenden</b>'; p.onclick = () => { try { buzz(10); } catch (e) { } endDemo(); }; document.getElementById('device').appendChild(p); }
+    if (!p) { p = document.createElement('button'); p.id = 'demoPill'; p.className = 'demo-pill'; p.innerHTML = '<i></i>Demo · <b>Beenden</b>'; p.onclick = () => { try { buzz(10); } catch (e) { } endDemo(); }; }
+    const app = document.getElementById('app'); if (p.parentElement !== app) app.prepend(p);
   }
   const _r = window.render;
   window.render = function () { const r = _r.apply(this, arguments); try { pill(); } catch (e) { } return r; };

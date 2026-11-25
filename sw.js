@@ -1,5 +1,5 @@
 /* Offline – Service Worker: App startet sofort und auch ohne Netz. Neue Versionen kommen beim nächsten Start. */
-const C = 'offline-v1';
+const C = 'offline-v2';
 const CORE = ['./', './index.html', './icon-180.png', './icon-192.png', './icon-512.png', './manifest.webmanifest'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(C).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== C).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
